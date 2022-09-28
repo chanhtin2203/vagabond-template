@@ -1,0 +1,75 @@
+.wrapperMain {
+  min-height: calc(100vh - 211px - 58px);
+}
+.promotion {
+  margin-top: 1px;
+  padding-bottom: 30px;
+}
+
+.promotionBgroundWhite {
+  background: #ffffff;
+  padding: 10px 12px;
+  overflow: hidden;
+
+  h2 {
+    font-size: 1.6rem;
+    margin: 0 0 8px;
+  }
+}
+
+.listPromotion {
+  margin: 0 -8px;
+  display: flex;
+}
+
+.itemPromotion {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 0 8px;
+}
+
+.itemInnerPromotion {
+  height: 100%;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  span {
+    display: block;
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 17px;
+  color: #000000;
+}
+
+.content {
+  font-size: 13px;
+  color: #000000;
+}
+
+.copycode {
+  text-align: right;
+}
+
+.buttonCopy {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000000;
+  border: 2px solid #000;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 5px;
+  padding: 2px 10px 3px;
+  border-radius: 15px;
+  letter-spacing: -0.25px;
+  min-width: 100px;
+  outline: none;
+  cursor: pointer;
+}

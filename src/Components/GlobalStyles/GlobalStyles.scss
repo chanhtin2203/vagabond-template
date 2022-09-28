@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+:root {
+  --font-famaly: "Quicksand", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: var(--font-famaly) !important;
+  font-size: 1.4rem;
+  line-height: 1.45;
+  text-rendering: optimizeSpeed;
+  color: #000;
+  overflow-x: hidden;
+  background: #ffffff;
+  position: initial;
+  min-height: 100vh;
+}
+
+button,
+input,
+[tabindex] {
+  outline: none;
+  border: none;
+}
+
+.minHeightBody {
+  min-height: calc(100vh - 211px - 58px);
+}
+
+body a {
+  color: #000;
+  text-decoration: none;
+
+  &:hover {
+    color: #000;
+  }
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+  color: #000000;
+  margin: 0 0 13px 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+body ul,
+body ol {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+b {
+  font-weight: 700;
+}
+
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+dialog,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}

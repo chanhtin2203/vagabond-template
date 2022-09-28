@@ -1,0 +1,220 @@
+.collectionWrapper {
+  margin-bottom: 50px;
+}
+
+.collectionHeading {
+  margin-bottom: 30px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.collectionTitle {
+  font-size: 2.4rem;
+  margin: 0;
+  font-weight: 700;
+  display: inline-block;
+  color: #000000;
+
+  a {
+    color: #000000;
+  }
+}
+
+.listProductRow {
+  margin-left: -5px;
+  margin-right: -5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.productsLoop {
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-bottom: 10px;
+}
+.flex5Col {
+  flex-basis: "20%";
+  width: 20%;
+}
+.productInner {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.productsImage {
+  position: relative;
+  overflow: hidden;
+}
+
+.productsListImage {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.productImageInner {
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+
+  picture {
+    width: 100%;
+    object-fit: contain;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+}
+
+.productsDetail {
+  padding: 12px 10px 4px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
+  h3 {
+    font-size: 14px;
+    margin: 0 0 8px;
+    font-weight: 500;
+    line-height: 1.45;
+    min-height: 40px;
+  }
+}
+.productPrice {
+  margin-top: auto;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000000;
+
+  .price {
+    margin-right: 4px;
+  }
+}
+
+.wrapperBtn {
+  text-align: center;
+}
+.button {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  overflow: hidden;
+  padding: 12px 28px;
+  line-height: normal;
+  color: #fff;
+  background-color: #000000;
+  border: 1px solid #2c2c2c;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 1px;
+  outline: none;
+  border-radius: 2px;
+  text-transform: uppercase;
+  transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+
+  &::before {
+    content: "";
+    display: block;
+    background-color: #2c2c2c;
+    position: absolute;
+    left: -2px;
+    top: 0;
+    right: -2px;
+    bottom: 0;
+    z-index: -1;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    -webkit-transform-origin: left center;
+    transform-origin: left center;
+    -webkit-transition: -webkit-transform 0.45s
+      cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+      -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+}
+
+.collectionLoadmore {
+  text-align: center;
+}
+
+.btnLoadmore {
+  text-transform: initial;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 10px 25px;
+  border-radius: 4px;
+  background: transparent;
+  color: #2c2c2c;
+  border: 1px solid #2c2c2c;
+
+  b {
+    text-transform: lowercase;
+  }
+
+  &::before {
+    background-color: #ffffff;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    margin-top: -9px;
+    width: 20px;
+    height: 19px;
+    border-radius: 50%;
+    border: 2px dotted #000000;
+    opacity: 0;
+    transition: opacity 0.5s;
+    animation: 1s linear infinite rotate;
+  }
+}
+
+@media (min-width: 992px) {
+  .productInner {
+    position: relative;
+    overflow: hidden;
+    transition: all 400ms ease;
+  }
+  .productsDetail {
+    background: rgba(255, 255, 255, 0.8);
+    transition: transform 400ms ease;
+  }
+  .btnLoadmore:hover {
+    border-color: #000000;
+    color: #000000 !important;
+  }
+  .button:hover,
+  .button:focus {
+    border-color: #000000;
+    color: #ffffff;
+  }
+  .button:hover::before,
+  .button:focus::before {
+    transform-origin: right center;
+    transform: scale(0, 1);
+  }
+}

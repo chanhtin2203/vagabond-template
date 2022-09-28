@@ -1,0 +1,495 @@
+.layoutCollection {
+  .breadcrumbShop {
+    margin-top: -1px;
+    background: transparent;
+    margin-bottom: 20px;
+    padding: 0 0px;
+  }
+}
+
+.breadcrumbShop {
+  margin-bottom: 0;
+}
+
+.collectionBanner {
+  text-align: center;
+  margin-bottom: 0;
+
+  img {
+    display: block;
+    margin: auto;
+  }
+}
+
+.collectionHeading {
+  margin: 30px 0 10px;
+}
+
+.bgWhiteHeading {
+  background: #ffffff;
+  padding: 15px 20px;
+
+  .title {
+    margin: 0;
+    font-size: 26px;
+  }
+}
+
+.collectionFilterContainer {
+  position: relative;
+}
+
+.collectionSortByFilter {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.collectionSortBy {
+  flex: 1 1;
+  width: 50%;
+}
+
+div:last-child .boxstyleMb {
+  border-right: 1px solid #e7e7e7;
+}
+
+.collectionSortBy .boxstyleMb {
+  position: relative;
+  height: 38px;
+  line-height: 36px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0px 40px 0px 10px;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #e7e7e7;
+  border-right: 0;
+  border-radius: 0;
+}
+
+.titleFilter {
+  margin: 0;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+
+.iconFilter {
+  height: 36px;
+  line-height: 36px;
+  display: inline-block;
+  vertical-align: top;
+  color: #333;
+  margin-right: 6px;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    width: 0px;
+    height: 0px;
+    margin: 0;
+    background: transparent;
+    border-style: solid;
+    border-width: 7px 6px 0 6px;
+    border-color: #bababa transparent transparent transparent;
+  }
+}
+
+.iconSort {
+  font-size: 2.5rem;
+  height: 100%;
+}
+
+.collectionSortByOption {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-top: 0;
+  transition: all 0.3s ease;
+}
+
+.sortByContent {
+  margin: 0;
+  padding: 5px 10px;
+
+  li {
+    position: relative;
+    cursor: pointer;
+    padding: 4px 10px 4px 25px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      margin: auto;
+      z-index: 1;
+      width: 12px;
+      height: 6px;
+      border: 1.5px solid #000000;
+      border-top-style: none;
+      border-right-style: none;
+      transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+      transform: rotate(-45deg) scale(0, 0);
+    }
+
+    &.active::before {
+      -webkit-transform: rotate(-45deg) scale(1, 1);
+      transform: rotate(-45deg) scale(1, 1);
+    }
+  }
+}
+
+.wrapperLayerFilter {
+  margin-bottom: 15px;
+
+  .layerFilterContainer {
+    .layerFilterTitle {
+      display: inline-block;
+      max-width: 30%;
+    }
+  }
+}
+
+.wrapperLayerFilter {
+  .layerFilterTitle {
+    text-transform: uppercase;
+  }
+}
+
+.layerFilterContainer {
+  margin-bottom: 5px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.layerTitleFilter {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.4rem;
+
+  &::after {
+    content: "";
+    width: 1px;
+    height: 20px;
+    background: #e7e7e7;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 20px;
+  }
+}
+
+.layerIconFilter {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+
+  svg {
+    width: 20px;
+    height: 30px;
+    fill: #909097;
+    stroke: #909097;
+    transition: 0.5s;
+  }
+}
+
+.layerFilterGroup {
+  flex: 1 1 auto;
+  width: 1%;
+}
+
+.filterGroupBlock {
+  position: relative;
+}
+
+.filterGroupTitle {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 15px;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  cursor: pointer;
+
+  span {
+    font-weight: 700;
+  }
+}
+
+.iconControl {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 5px;
+  margin: auto;
+  font-size: 10px;
+  vertical-align: 1px;
+  display: inline-block;
+  transition: transform 0.3s;
+
+  svg {
+    height: 100%;
+    font-size: 2rem;
+  }
+}
+
+.filterGroupContent {
+  padding: 10px 15px;
+  background: #ffffff;
+}
+
+.checkboxList {
+  li {
+    position: relative;
+    margin: 0 0 8px;
+    padding: 0 0 0 25px;
+
+    &:hover {
+      color: #000000;
+    }
+
+    &:hover input[type="checkbox"]::after {
+      border-color: #000000;
+    }
+  }
+
+  label {
+    margin: 0px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+}
+
+.checkboxList input[type="checkbox"],
+.checkboxList input[type="radio"] {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin-top: 0;
+  vertical-align: top;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  outline: none;
+  background: #fff;
+  border: 1px solid transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 5px;
+    margin: auto;
+    z-index: 1;
+    width: 10px;
+    height: 5px;
+    border: 2px solid #ffffff;
+    border-top-style: none;
+    border-right-style: none;
+    -webkit-transition: -webkit-transform 0.4s
+      cubic-bezier(0.45, 1.8, 0.5, 0.75);
+    -moz-transition: -moz-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+    transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+    -webkit-transform: rotate(-45deg) scale(0, 0);
+    -moz-transform: rotate(-45deg) scale(0, 0);
+    -ms-transform: rotate(-45deg) scale(0, 0);
+    -o-transform: rotate(-45deg) scale(0, 0);
+    transform: rotate(-45deg) scale(0, 0);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 1px solid #cedadd;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  &:checked::before {
+    -webkit-transform: rotate(-45deg) scale(1, 1);
+    -moz-transform: rotate(-45deg) scale(1, 1);
+    -ms-transform: rotate(-45deg) scale(1, 1);
+    -o-transform: rotate(-45deg) scale(1, 1);
+    transform: rotate(-45deg) scale(1, 1);
+  }
+
+  &:checked::after {
+    background: #000000;
+  }
+}
+
+.filterColor {
+  .checkboxList li {
+    margin: 0 12px 15px 0;
+    line-height: normal;
+    float: left;
+    padding: 0;
+  }
+
+  .checkboxList input[type="checkbox"] {
+    display: none;
+
+    &:checked + label {
+      box-shadow: 0 0 0 3px #ffffff, 0 0 0 4px #e7e7e7;
+    }
+
+    &:checked + label::before {
+      content: "";
+      position: absolute;
+      top: 7px;
+      left: 6px;
+      height: 6px;
+      width: 12px;
+      z-index: 99;
+      border: 2px solid #fff;
+      border-top-style: none;
+      border-right-style: none;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
+  }
+
+  .checkboxList li label {
+    margin-left: 0;
+    margin-bottom: 0;
+  }
+}
+
+.filterColor .checkboxList li label {
+  border: 1px solid #eaeaea;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  float: left;
+  position: relative;
+  font-size: 0;
+}
+
+.layerFilterTags {
+  .filterTags {
+    position: relative;
+    border-radius: 12px;
+    margin: 10px 10px 0px 0;
+    color: #5d5d5d;
+    background: #fff;
+    border: 1px solid #dadada;
+    font-size: 13px;
+    display: none;
+    padding: 2px 32px 3px 10px;
+  }
+
+  .filterTags.opened {
+    display: inline-block;
+  }
+
+  .filterTagsRemove {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .filterTagRemoveAll {
+    cursor: pointer;
+    border: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    background: transparent;
+
+    span {
+      color: #000000;
+      border-bottom: 1px solid #000000;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .collectionFilterContainer .collectionSortByOption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    top: calc(100% + 10px);
+    z-index: 999;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .filterGroupContent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    top: calc(100% + 10px);
+    z-index: 100;
+    border: 1px solid #e7e7e7;
+    border-top: 0;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .filterGroupBlock .filterGroupContent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    top: calc(100% + 10px);
+    z-index: 100;
+    border: 1px solid #e7e7e7;
+    border-top: 0;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+}
+
+@media (min-width: 992px) {
+  .collectionFilterContainer:hover .collectionSortByOption {
+    pointer-events: auto;
+    visibility: visible;
+    top: 100%;
+    opacity: 1;
+  }
+
+  .filterGroupBlock:hover .filterGroupContent {
+    pointer-events: auto;
+    visibility: visible;
+    top: 100%;
+    opacity: 1;
+  }
+
+  .filterGroupBlock:hover .iconControl {
+    color: #666;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+}
