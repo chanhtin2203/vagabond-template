@@ -21,6 +21,12 @@ const Products = () => {
     { id: 1, text: "Sản phẩm nổi bật" },
     { id: 2, text: "Giá: Tăng dần" },
     { id: 3, text: "Giá: Giảm dần" },
+    { id: 4, text: "Tên: A-Z" },
+    { id: 5, text: "Tên: Z-A" },
+    { id: 6, text: "Cũ nhất" },
+    { id: 7, text: "Mới nhất" },
+    { id: 8, text: "Bán chạy nhất" },
+    { id: 9, text: "Tồn kho giảm dần" },
   ];
 
   const checkboxPrice = [

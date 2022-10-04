@@ -19,10 +19,14 @@ body {
   line-height: 1.45;
   text-rendering: optimizeSpeed;
   color: #000;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: #ffffff;
   position: initial;
   min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
 }
 
 button,
@@ -120,5 +124,54 @@ img {
 @media (min-width: 1200px) {
   .container {
     width: 1170px;
+  }
+}
+
+// Custom css
+body .slick-track {
+  margin-left: 0;
+}
+
+body .slick-prev,
+body .slick-next {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  line-height: 36px;
+  font-size: 14px;
+  color: transparent;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  outline: none;
+  -webkit-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+  box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+  -webkit-border-radius: 50%;
+  -ms-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transform: scale(0.8) translateY(-50%);
+  -ms-transform: scale(0.8) translateY(-50%);
+  transform: scale(0.8) translateY(-50%);
+  -webkit-transition: all 0.4s;
+  -ms-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+body .slick-disabled {
+  visibility: hidden;
+  opacity: 0;
+}
+
+body .slick-prev {
+  left: -16px;
+}
+
+@media (min-width: 992px) {
+  body .slick-prev:hover,
+  body .slick-next:hover {
+    -webkit-transform: scale(1) translateY(-50%);
+    -ms-transform: scale(1) translateY(-50%);
+    transform: scale(1) translateY(-50%);
   }
 }

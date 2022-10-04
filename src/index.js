@@ -5,13 +5,17 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import GlobalStyles from "./Components/GlobalStyles/GlobalStyles";
 import "antd/dist/antd.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <GlobalStyles>
-      <App />
-    </GlobalStyles>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <GlobalStyles>
+        <App />
+      </GlobalStyles>
+    </BrowserRouter>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
