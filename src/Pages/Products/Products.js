@@ -1,21 +1,47 @@
-import { Breadcrumb, Col, Row } from "antd";
+import { Breadcrumb, Col, Row, Spin } from "antd";
 import classNames from "classnames/bind";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineSortAscending } from "react-icons/ai";
-import { HiChevronDown } from "react-icons/hi";
 import { GrFormClose } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { HiChevronDown } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import Collection from "../../Components/Collection/Collection";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import styles from "./Products.module.scss";
-import Collection from "../../Components/Collection/Collection";
+import {
+  getAllProductsRandom,
+  getProductsByCategory,
+} from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 const Products = () => {
+  const { categoryId } = useParams();
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState([]);
   const [size, setSize] = useState([]);
   const [color, setColor] = useState([]);
   const [activeId, setActiveId] = useState(1);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.products.isLoading);
+
+  useEffect(() => {
+    const fetchingProducts = async () => {
+      if (categoryId === "all-products") {
+        const res = await dispatch(getAllProductsRandom());
+        setProducts(res.payload);
+        setCategory("Tất cả sản phẩm");
+      } else {
+        const res = await dispatch(getProductsByCategory(categoryId));
+        setProducts(res.payload);
+        const { categories } = res.payload.find((item) => item.categories);
+        setCategory(categories[1]);
+      }
+    };
+    fetchingProducts();
+  }, [categoryId]);
 
   const values = [
     { id: 1, text: "Sản phẩm nổi bật" },
@@ -115,294 +141,304 @@ const Products = () => {
     <>
       <Header />
       <main className="minHeightBody">
-        <div className={cx("layoutCollection")}>
-          <div className={cx("breadcrumbShop")}>
-            <div className="container">
-              <Breadcrumb>
-                <Breadcrumb.Item>
-                  <Link to={"/"}>Trang chủ</Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                  <span>TEE | TSHIRT</span>
-                </Breadcrumb.Item>
-              </Breadcrumb>
-            </div>
-          </div>
-          <div className={cx("collectionBanner")}>
-            <div className="container">
-              <img
-                src="https://file.hstatic.net/1000281824/file/z3533341777412_f5edd4a273a3ef5093b6567f1acd7b0f_1d288245ef874e9fab99f73c62539549.jpg"
-                alt="TEE | TSHIRT"
-              />
-            </div>
-          </div>
-          <div className="wrapperMainContent">
-            <div className={cx("collectionHeading")}>
+        <Spin spinning={loading}>
+          <div className={cx("layoutCollection")}>
+            <div className={cx("breadcrumbShop")}>
               <div className="container">
-                <div className={cx("bgWhiteHeading")}>
-                  <Row gutter={30}>
-                    <Col md={18} xs={12}>
-                      <h1 className={cx("title")}>TEE | TSHIRT</h1>
-                    </Col>
-                    <Col md={6} xs={12}>
-                      <div className={cx("collectionFilterContainer")}>
-                        <div className={cx("collectionSortByFilter")}>
-                          <div className={cx("collectionSortBy")}>
-                            <div className={cx("boxstyleMb")}>
-                              <p className={cx("titleFilter")}>
-                                <span className={cx("iconFilter")}>
-                                  <AiOutlineSortAscending
-                                    className={cx("iconSort")}
-                                  />
-                                </span>
-                                Sắp xếp
-                              </p>
+                <Breadcrumb>
+                  <Breadcrumb.Item>
+                    <Link to={"/"}>Trang chủ</Link>
+                  </Breadcrumb.Item>
+                  <Breadcrumb.Item>
+                    <span>{category ? category : "Tất cả sản phẩm"}</span>
+                  </Breadcrumb.Item>
+                </Breadcrumb>
+              </div>
+            </div>
+            <div className={cx("collectionBanner")}>
+              <div className="container">
+                <img
+                  src="https://file.hstatic.net/1000281824/file/z3533341777412_f5edd4a273a3ef5093b6567f1acd7b0f_1d288245ef874e9fab99f73c62539549.jpg"
+                  alt="TEE | TSHIRT"
+                />
+              </div>
+            </div>
+            <div className="wrapperMainContent">
+              <div className={cx("collectionHeading")}>
+                <div className="container">
+                  <div className={cx("bgWhiteHeading")}>
+                    <Row gutter={30}>
+                      <Col md={18} xs={12}>
+                        <h1 className={cx("title")}>
+                          {category ? category : "Tất cả sản phẩm"}
+                        </h1>
+                      </Col>
+                      <Col md={6} xs={12}>
+                        <div className={cx("collectionFilterContainer")}>
+                          <div className={cx("collectionSortByFilter")}>
+                            <div className={cx("collectionSortBy")}>
+                              <div className={cx("boxstyleMb")}>
+                                <p className={cx("titleFilter")}>
+                                  <span className={cx("iconFilter")}>
+                                    <AiOutlineSortAscending
+                                      className={cx("iconSort")}
+                                    />
+                                  </span>
+                                  Sắp xếp
+                                </p>
+                              </div>
                             </div>
                           </div>
+                          <div className={cx("collectionSortByOption")}>
+                            <ul className={cx("sortByContent")}>
+                              {values.map((val) => (
+                                <li
+                                  onClick={() => setActiveId(val.id)}
+                                  className={
+                                    activeId === val.id
+                                      ? cx("active")
+                                      : "inactive"
+                                  }
+                                  key={val.id}
+                                >
+                                  <span>{val.text}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
-                        <div className={cx("collectionSortByOption")}>
-                          <ul className={cx("sortByContent")}>
-                            {values.map((val) => (
-                              <li
-                                onClick={() => setActiveId(val.id)}
-                                className={
-                                  activeId === val.id
-                                    ? cx("active")
-                                    : "inactive"
-                                }
-                                key={val.id}
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </div>
+              <div className={cx("collectionFilter")}>
+                <div className="container">
+                  <div className={cx("wrapperLayerFilter")}>
+                    <div className={cx("layerFilterContainer")}>
+                      <div className={cx("layerFilterTitle")}>
+                        <p className={cx("layerTitleFilter")}>
+                          <span className={cx("layerIconFilter")}>
+                            <svg viewBox="0 0 20 20">
+                              <path
+                                fill="none"
+                                strokeWidth="2"
+                                strokeLinejoin="round"
+                                strokeMiterlimit="10"
+                                d="M12 9v8l-4-4V9L2 3h16z"
+                              ></path>
+                            </svg>
+                          </span>
+                          Bộ lọc
+                        </p>
+                      </div>
+                      <div className={cx("layerFilterGroup")}>
+                        <Row gutter={30}>
+                          <Col md={6} sm={12} xs={12}>
+                            <div className={cx("filterGroupBlock")}>
+                              <div className={cx("filterGroupTitle")}>
+                                <span>Lọc giá</span>
+                                <div className={cx("iconControl")}>
+                                  <HiChevronDown />
+                                </div>
+                              </div>
+                              <div className={cx("filterGroupContent")}>
+                                <ul className={cx("checkboxList")}>
+                                  {checkboxPrice.map((item, index) => (
+                                    <li key={index}>
+                                      <input
+                                        checked={price.includes(item.id)}
+                                        onChange={() =>
+                                          handleChangeCheckbox(item.id)
+                                        }
+                                        type={item.type}
+                                        id={item.id}
+                                      />
+                                      <label htmlFor={item.id}>
+                                        <span>{item.title} </span>
+                                        {item.decs}
+                                      </label>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={6} sm={12} xs={12}>
+                            <div className={cx("filterGroupBlock")}>
+                              <div className={cx("filterGroupTitle")}>
+                                <span>Màu sắc</span>
+                                <div className={cx("iconControl")}>
+                                  <HiChevronDown />
+                                </div>
+                              </div>
+                              <div
+                                className={cx(
+                                  "filterGroupContent",
+                                  "filterColor"
+                                )}
                               >
-                                <span>{val.text}</span>
-                              </li>
-                            ))}
-                          </ul>
+                                <ul className={cx("checkboxList")}>
+                                  {checkboxColor.map((item, index) => (
+                                    <li key={index}>
+                                      <input
+                                        checked={color.includes(item.value)}
+                                        onChange={() =>
+                                          handleChangeColor(item.value)
+                                        }
+                                        type={item.type}
+                                        id={item.id}
+                                      />
+                                      <label
+                                        htmlFor={item.id}
+                                        style={{
+                                          backgroundColor: `${item.bg}`,
+                                        }}
+                                      >
+                                        {item.value}
+                                      </label>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={6} sm={12} xs={12}>
+                            <div className={cx("filterGroupBlock")}>
+                              <div className={cx("filterGroupTitle")}>
+                                <span>Kích thước</span>
+                                <div className={cx("iconControl")}>
+                                  <HiChevronDown />
+                                </div>
+                              </div>
+                              <div className={cx("filterGroupContent")}>
+                                <ul className={cx("checkboxList")}>
+                                  {checkboxSize.map((item, index) => (
+                                    <li key={index}>
+                                      <input
+                                        checked={size.includes(item.title)}
+                                        onChange={() =>
+                                          handleChangeSize(item.title)
+                                        }
+                                        type={item.type}
+                                        id={item.id}
+                                      />
+                                      <label htmlFor={item.id}>
+                                        {item.title}
+                                      </label>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </div>
+                    <div className={cx("layerFilterTags")}>
+                      {price.length > 0 && (
+                        <div
+                          className={
+                            price
+                              ? cx("filterTags", "opened")
+                              : cx("filterTags")
+                          }
+                        >
+                          Lọc giá:{" "}
+                          <b>
+                            {checkboxPrice
+                              .filter((item) =>
+                                price.map((i) => i).includes(item.id)
+                              )
+                              .map((value, index, checkboxPrice) => (
+                                <Fragment key={value.id}>
+                                  {value.title && <span>{value.title} </span>}
+                                  {index + 1 === checkboxPrice.length
+                                    ? value.decs
+                                    : value.decs + ", "}
+                                </Fragment>
+                              ))}
+                          </b>
+                          <span
+                            className={cx("filterTagsRemove")}
+                            onClick={handleDeletePrice}
+                          >
+                            <GrFormClose
+                              style={{ fontSize: "20px", height: "100%" }}
+                            />
+                          </span>
                         </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </div>
-            <div className={cx("collectionFilter")}>
-              <div className="container">
-                <div className={cx("wrapperLayerFilter")}>
-                  <div className={cx("layerFilterContainer")}>
-                    <div className={cx("layerFilterTitle")}>
-                      <p className={cx("layerTitleFilter")}>
-                        <span className={cx("layerIconFilter")}>
-                          <svg viewBox="0 0 20 20">
-                            <path
-                              fill="none"
-                              strokeWidth="2"
-                              strokeLinejoin="round"
-                              strokeMiterlimit="10"
-                              d="M12 9v8l-4-4V9L2 3h16z"
-                            ></path>
-                          </svg>
-                        </span>
-                        Bộ lọc
-                      </p>
-                    </div>
-                    <div className={cx("layerFilterGroup")}>
-                      <Row gutter={30}>
-                        <Col md={6} sm={12} xs={12}>
-                          <div className={cx("filterGroupBlock")}>
-                            <div className={cx("filterGroupTitle")}>
-                              <span>Lọc giá</span>
-                              <div className={cx("iconControl")}>
-                                <HiChevronDown />
-                              </div>
-                            </div>
-                            <div className={cx("filterGroupContent")}>
-                              <ul className={cx("checkboxList")}>
-                                {checkboxPrice.map((item, index) => (
-                                  <li key={index}>
-                                    <input
-                                      checked={price.includes(item.id)}
-                                      onChange={() =>
-                                        handleChangeCheckbox(item.id)
-                                      }
-                                      type={item.type}
-                                      id={item.id}
-                                    />
-                                    <label htmlFor={item.id}>
-                                      <span>{item.title} </span>
-                                      {item.decs}
-                                    </label>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col md={6} sm={12} xs={12}>
-                          <div className={cx("filterGroupBlock")}>
-                            <div className={cx("filterGroupTitle")}>
-                              <span>Màu sắc</span>
-                              <div className={cx("iconControl")}>
-                                <HiChevronDown />
-                              </div>
-                            </div>
-                            <div
-                              className={cx(
-                                "filterGroupContent",
-                                "filterColor"
-                              )}
-                            >
-                              <ul className={cx("checkboxList")}>
-                                {checkboxColor.map((item, index) => (
-                                  <li key={index}>
-                                    <input
-                                      checked={color.includes(item.value)}
-                                      onChange={() =>
-                                        handleChangeColor(item.value)
-                                      }
-                                      type={item.type}
-                                      id={item.id}
-                                    />
-                                    <label
-                                      htmlFor={item.id}
-                                      style={{ backgroundColor: `${item.bg}` }}
-                                    >
-                                      {item.value}
-                                    </label>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col md={6} sm={12} xs={12}>
-                          <div className={cx("filterGroupBlock")}>
-                            <div className={cx("filterGroupTitle")}>
-                              <span>Kích thước</span>
-                              <div className={cx("iconControl")}>
-                                <HiChevronDown />
-                              </div>
-                            </div>
-                            <div className={cx("filterGroupContent")}>
-                              <ul className={cx("checkboxList")}>
-                                {checkboxSize.map((item, index) => (
-                                  <li key={index}>
-                                    <input
-                                      checked={size.includes(item.title)}
-                                      onChange={() =>
-                                        handleChangeSize(item.title)
-                                      }
-                                      type={item.type}
-                                      id={item.id}
-                                    />
-                                    <label htmlFor={item.id}>
-                                      {item.title}
-                                    </label>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </div>
-                  <div className={cx("layerFilterTags")}>
-                    {price.length > 0 && (
-                      <div
-                        className={
-                          price ? cx("filterTags", "opened") : cx("filterTags")
-                        }
-                      >
-                        Lọc giá:{" "}
-                        <b>
-                          {checkboxPrice
-                            .filter((item) =>
-                              price.map((i) => i).includes(item.id)
-                            )
-                            .map((value, index, checkboxPrice) => (
-                              <Fragment key={value.id}>
-                                {value.title && <span>{value.title} </span>}
-                                {index + 1 === checkboxPrice.length
-                                  ? value.decs
-                                  : value.decs + ", "}
-                              </Fragment>
-                            ))}
-                        </b>
-                        <span
-                          className={cx("filterTagsRemove")}
-                          onClick={handleDeletePrice}
+                      )}
+                      {color.length > 0 && (
+                        <div
+                          className={
+                            color
+                              ? cx("filterTags", "opened")
+                              : cx("filterTags")
+                          }
                         >
-                          <GrFormClose
-                            style={{ fontSize: "20px", height: "100%" }}
-                          />
-                        </span>
-                      </div>
-                    )}
-                    {color.length > 0 && (
-                      <div
-                        className={
-                          color ? cx("filterTags", "opened") : cx("filterTags")
-                        }
-                      >
-                        Màu sắc:{" "}
-                        <b>
-                          {color?.map((item, index) =>
-                            index === 0 ? ` ${item}` : `, ${item}`
-                          )}
-                        </b>
-                        <span
-                          className={cx("filterTagsRemove")}
-                          onClick={handleDeleteColor}
-                        >
-                          <GrFormClose
-                            style={{ fontSize: "20px", height: "100%" }}
-                          />
-                        </span>
-                      </div>
-                    )}
+                          Màu sắc:{" "}
+                          <b>
+                            {color?.map((item, index) =>
+                              index === 0 ? ` ${item}` : `, ${item}`
+                            )}
+                          </b>
+                          <span
+                            className={cx("filterTagsRemove")}
+                            onClick={handleDeleteColor}
+                          >
+                            <GrFormClose
+                              style={{ fontSize: "20px", height: "100%" }}
+                            />
+                          </span>
+                        </div>
+                      )}
 
-                    {size.length > 0 && (
-                      <div
-                        className={
-                          size ? cx("filterTags", "opened") : cx("filterTags")
-                        }
-                      >
-                        Kích thước:{" "}
-                        <b>
-                          {size?.map((item, index) =>
-                            index === 0 ? ` ${item}` : `, ${item}`
-                          )}
-                        </b>
-                        <span
-                          className={cx("filterTagsRemove")}
-                          onClick={handleDeleteSize}
+                      {size.length > 0 && (
+                        <div
+                          className={
+                            size ? cx("filterTags", "opened") : cx("filterTags")
+                          }
                         >
-                          <GrFormClose
-                            style={{ fontSize: "20px", height: "100%" }}
-                          />
-                        </span>
-                      </div>
-                    )}
-                    {(price.length > 0 && size.length > 0) ||
-                    (price.length > 0 && color.length > 0) ||
-                    (size.length > 0 && color.length > 0) ? (
-                      <div
-                        className={cx(
-                          "filterTags",
-                          "filterTagRemoveAll",
-                          "opened"
-                        )}
-                      >
-                        <span onClick={handleDeleteAll}>Xóa hết </span>
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                          Kích thước:{" "}
+                          <b>
+                            {size?.map((item, index) =>
+                              index === 0 ? ` ${item}` : `, ${item}`
+                            )}
+                          </b>
+                          <span
+                            className={cx("filterTagsRemove")}
+                            onClick={handleDeleteSize}
+                          >
+                            <GrFormClose
+                              style={{ fontSize: "20px", height: "100%" }}
+                            />
+                          </span>
+                        </div>
+                      )}
+                      {(price.length > 0 && size.length > 0) ||
+                      (price.length > 0 && color.length > 0) ||
+                      (size.length > 0 && color.length > 0) ? (
+                        <div
+                          className={cx(
+                            "filterTags",
+                            "filterTagRemoveAll",
+                            "opened"
+                          )}
+                        >
+                          <span onClick={handleDeleteAll}>Xóa hết </span>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+              <Collection nameBtn={category} items={products} />
             </div>
-            <Collection nameBtn={"BACKPACKS | BALO"} />
           </div>
-        </div>
+        </Spin>
       </main>
       <Footer />
     </>

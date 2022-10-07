@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./SearchProd.module.scss";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { searchProduct } from "../../redux/slice/productsSlice";
+import useDebounce from "../../Hooks/useDebounce";
 
 const cx = classNames.bind(styles);
 
 const SearchProd = ({ setModalSearch }) => {
+  const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
+  const [resultSearch, setResultSearch] = useState([]);
+  const product = useSelector((state) => state.products.products);
+
+  const debounceValue = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    const fetchingSearch = async () => {
+      if (!debounceValue.trim()) {
+        setResultSearch([]);
+        return;
+      }
+      const res = await dispatch(searchProduct(debounceValue));
+      setResultSearch(res.payload);
+    };
+    fetchingSearch();
+  }, [debounceValue, dispatch]);
+
   return (
     <div className={cx("headerWrapSearch")}>
       <div className={cx("headerSearch")}>
@@ -27,6 +49,7 @@ const SearchProd = ({ setModalSearch }) => {
                 autoComplete="off"
                 maxLength={40}
                 required
+                onChange={(e) => setSearchValue(e.target.value)}
               />
             </div>
           </form>
@@ -35,33 +58,32 @@ const SearchProd = ({ setModalSearch }) => {
             style={{ display: "block" }}
           >
             <div className={cx("resultsContent")}>
-              <div className={cx("itemUlt")}>
-                <div className={cx("thumbs")}>
-                  <Link to={"#"}>
-                    <img
-                      alt="Áo Xoài YangHo - AXYH"
-                      src="//product.hstatic.net/1000281824/product/600_19d98a89c2f04fd4872208e3725dd86e_compact.jpg"
-                    />
+              {resultSearch.slice(0, 5).map((item) => (
+                <div key={item._id}>
+                  <div className={cx("itemUlt")}>
+                    <div className={cx("thumbs")}>
+                      <Link to={`/products/${item._id}`}>
+                        <img alt={item.title} src={item.image} />
+                      </Link>
+                    </div>
+                    <div className={cx("title")}>
+                      <Link to={`/products/${item._id}`}> {item.title}</Link>
+                      <p>{item.price}₫</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {resultSearch.length > 5 && (
+                <div className={cx("resultMore", "resultMoreDesktop")}>
+                  <Link to={`/products?search=${debounceValue}`}>
+                    Xem thêm {resultSearch.length - 5} sản phẩm
                   </Link>
                 </div>
-                <div className={cx("title")}>
-                  <Link to={"#"}> Áo Xoài YangHo - AXYH</Link>
-                  <p>250,000₫</p>
-                </div>
-              </div>
-              <div className={cx("resultMore", "resultMoreDesktop")}>
-                <Link to={"#"}>Xem thêm 66 sản phẩm</Link>
-              </div>
-              {/* <p className={cx("dataEmpty")}>Không có sản phẩm nào...</p> */}
+              )}
+              {debounceValue && resultSearch.length === 0 && (
+                <p className={cx("dataEmpty")}>Không có sản phẩm nào...</p>
+              )}
             </div>
-            {/* <div className={cx("searchSuggest", "showSuggest")}>
-              <p>Gợi ý cho bạn:</p>
-              <ul>
-                <li className={cx("item")}>
-                  <Link to={"/"}>ÁO | CLOTHES</Link>
-                </li>
-              </ul>
-            </div> */}
           </div>
         </div>
       </div>

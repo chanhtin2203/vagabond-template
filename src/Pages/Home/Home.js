@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Carousel, message } from "antd";
 import classNames from "classnames/bind";
 import Footer from "../../Components/Footer/Footer";
@@ -6,13 +6,45 @@ import Header from "../../Components/Header/Header";
 import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
 import Collection from "../../Components/Collection/Collection";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 
 const Home = () => {
+  const [category, setCategory] = useState([]);
+  const products = useSelector((state) => state.products.products);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "VAGABOND - VAGABOND VIETNAM";
+    dispatch(getAllProducts());
+  }, []);
+
   const handleClick = () => {
     message.warning("Chức năng sẽ có trong tương lai !!!");
   };
+
+  useEffect(() => {
+    const uniqueNames = products
+      .map((i) => i.categories)
+      .filter((item, pos, self) => self.indexOf(item) === pos);
+    setCategory(uniqueNames);
+  }, [products]);
+
+  // for (let cat in category) {
+  //   const backpacks = products
+  //     .filter((item) => item.categories.includes(category[cat]))
+  //     .slice(0, 10);
+  //   console.log(backpacks);
+  // }
+
+  products.filter((product) =>
+    category
+      .filter((i) => i === product.categories[1])
+      .slice(0, 10)
+      .map((i) => i)
+  );
 
   return (
     <div>
@@ -117,7 +149,9 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <Collection title={"BACKPACKS | BALO"} />
+        {/* {category.map((item, index) => (
+          <Collection title={item} key={index} />
+        ))} */}
       </main>
       <Footer />
     </div>

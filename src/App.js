@@ -7,6 +7,7 @@ import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import ScrollToTop from "./Hooks/useScrollToTop";
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
+import ResultSearch from "./Pages/ResultSearch/ResultSearch";
 function App() {
   return (
     <div className="App">
@@ -16,6 +17,7 @@ function App() {
         <Route path="/collections/:categoryId" element={<Products />} />
         <Route path="/products/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/products" element={<ResultSearch />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<ErrorPage />} />
