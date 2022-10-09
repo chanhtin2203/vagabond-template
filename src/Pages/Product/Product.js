@@ -26,12 +26,12 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   useEffect(() => {
     const getDetail = async () => {
       const res = await dispatch(getDetailProduct(id));
-      const { categories } = res.payload;
-      setCategory(categories[0]);
+      const { category } = res.payload;
+      setCategory(category);
       setBreadcrumb(
-        categories[0] === "tee" || categories[0] === "jacket"
+        category === "tee" || category === "jacket"
           ? "Áo"
-          : categories[0] === "quan"
+          : category === "quan"
           ? "Quần"
           : "Phụ kiện"
       );

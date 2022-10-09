@@ -14,6 +14,8 @@ const SearchProd = ({ setModalSearch }) => {
   const [resultSearch, setResultSearch] = useState([]);
   const product = useSelector((state) => state.products.products);
 
+  const category = [...new Set(product.map((i) => i.subCategory))];
+
   const debounceValue = useDebounce(searchValue, 500);
 
   useEffect(() => {

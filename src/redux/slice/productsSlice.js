@@ -42,6 +42,18 @@ export const searchProduct = createAsyncThunk(
   }
 );
 
+export const filterProducts = createAsyncThunk(
+  "products/searchProduct",
+  async ([value, category]) => {
+    const res = await axios.get(
+      category
+        ? `${BASE_URL}/products/search?filter=${value}&category=${category}`
+        : `${BASE_URL}/products/search?filter=${value}`
+    );
+    return res.data;
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState: {

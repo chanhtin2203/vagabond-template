@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Carousel, message } from "antd";
 import classNames from "classnames/bind";
@@ -6,45 +7,35 @@ import Header from "../../Components/Header/Header";
 import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
 import Collection from "../../Components/Collection/Collection";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllProducts } from "../../redux/slice/productsSlice";
+import { useSelector } from "react-redux";
 
 const cx = classNames.bind(styles);
 
 const Home = () => {
-  const [category, setCategory] = useState([]);
   const products = useSelector((state) => state.products.products);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    document.title = "VAGABOND - VAGABOND VIETNAM";
-    dispatch(getAllProducts());
-  }, []);
 
   const handleClick = () => {
     message.warning("Chức năng sẽ có trong tương lai !!!");
   };
 
-  useEffect(() => {
-    const uniqueNames = products
-      .map((i) => i.categories)
-      .filter((item, pos, self) => self.indexOf(item) === pos);
-    setCategory(uniqueNames);
-  }, [products]);
-
-  // for (let cat in category) {
-  //   const backpacks = products
-  //     .filter((item) => item.categories.includes(category[cat]))
-  //     .slice(0, 10);
-  //   console.log(backpacks);
-  // }
-
-  products.filter((product) =>
-    category
-      .filter((i) => i === product.categories[1])
-      .slice(0, 10)
-      .map((i) => i)
-  );
+  const backpacks = products
+    .filter((product) => product.category.includes("backpacks"))
+    .slice(0, 10);
+  const jacket = products
+    .filter((product) => product.category.includes("jacket"))
+    .slice(0, 10);
+  const tee = products
+    .filter((product) => product.category.includes("tee"))
+    .slice(0, 10);
+  const bag = products
+    .filter((product) => product.category.includes("bag"))
+    .slice(0, 10);
+  const wallets = products
+    .filter((product) => product.category.includes("wallets"))
+    .slice(0, 10);
+  const pants = products
+    .filter((product) => product.category.includes("quan"))
+    .slice(0, 10);
 
   return (
     <div>
@@ -149,9 +140,20 @@ const Home = () => {
             </div>
           </div>
         </section>
-        {/* {category.map((item, index) => (
-          <Collection title={item} key={index} />
-        ))} */}
+        <Collection
+          title={"BACKPACKS | BALO"}
+          href={"backpacks"}
+          items={backpacks}
+        />
+        <Collection
+          title={"ÁO KHOÁC | JACKET"}
+          href={"jacket"}
+          items={jacket}
+        />
+        <Collection title={"ÁO THUN | TSHIRT"} href={"tee"} items={tee} />
+        <Collection title={"TÚI | BAG"} href={"bag"} items={bag} />
+        <Collection title={"WALLETS | VÍ"} href={"wallets"} items={wallets} />
+        <Collection title={"PANTS | QUẦN"} href={"quan"} items={pants} />
       </main>
       <Footer />
     </div>

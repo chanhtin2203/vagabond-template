@@ -8,7 +8,7 @@ import styles from "./Collection.module.scss";
 
 const cx = classNames.bind(styles);
 
-const Collection = ({ title, nameBtn, items, href }) => {
+const Collection = ({ title, nameBtn, items = [], href }) => {
   const loading = useSelector((state) => state.products.isLoading);
   const [limit, setLimit] = useState(30);
 

@@ -13,12 +13,15 @@ import styles from "./Products.module.scss";
 import {
   getAllProductsRandom,
   getProductsByCategory,
+  getAllProducts,
+  filterProducts,
 } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 const Products = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState([]);
   const [size, setSize] = useState([]);
@@ -32,12 +35,14 @@ const Products = () => {
       if (categoryId === "all-products") {
         const res = await dispatch(getAllProductsRandom());
         setProducts(res.payload);
+        setAllProducts(res.payload);
         setCategory("Tất cả sản phẩm");
       } else {
         const res = await dispatch(getProductsByCategory(categoryId));
         setProducts(res.payload);
-        const { categories } = res.payload.find((item) => item.categories);
-        setCategory(categories[1]);
+        setAllProducts(res.payload);
+        const { subCategory } = res.payload.find((item) => item);
+        setCategory(subCategory);
       }
     };
     fetchingProducts();
@@ -56,11 +61,11 @@ const Products = () => {
   ];
 
   const checkboxPrice = [
-    { id: "p1", type: "checkbox", title: "Dưới ", decs: "100.000₫" },
-    { id: "p2", type: "checkbox", title: "", decs: "100.000₫ - 250.000₫" },
-    { id: "p3", type: "checkbox", title: "", decs: "250.000₫ - 500.000₫" },
-    { id: "p4", type: "checkbox", title: "", decs: "500.000₫ - 800.000₫" },
-    { id: "p5", type: "checkbox", title: "Trên ", decs: "800.000₫" },
+    { id: "under100000", title: "Dưới", decs: "100.000₫" },
+    { id: "range:100000_250000", title: "", decs: "100.000₫ - 250.000₫" },
+    { id: "range:250000_500000", title: "", decs: "250.000₫ - 500.000₫" },
+    { id: "range:500000_800000", title: "", decs: "500.000₫ - 800.000₫" },
+    { id: "on800000", title: "Trên ", decs: "800.000₫" },
   ];
 
   const checkboxSize = [
@@ -71,16 +76,52 @@ const Products = () => {
   ];
 
   const checkboxColor = [
-    { id: "c1", type: "checkbox", value: "Tím", bg: "#eb11eb" },
-    { id: "c2", type: "checkbox", value: "Vàng", bg: "#ffff05" },
-    { id: "c3", type: "checkbox", value: "Cam", bg: "#f54105" },
-    { id: "c4", type: "checkbox", value: "Hồng", bg: "#f23895" },
-    { id: "c5", type: "checkbox", value: "Đen", bg: "#000000" },
-    { id: "c6", type: "checkbox", value: "Xám", bg: "#cccaca" },
-    { id: "c7", type: "checkbox", value: "Trắng", bg: "#fffcfc" },
-    { id: "c8", type: "checkbox", value: "Xanh dương", bg: "#1757eb" },
-    { id: "c9", type: "checkbox", value: "Xanh", bg: "#099116" },
-    { id: "c10", type: "checkbox", value: "Xanh lá", bg: "#52ff52" },
+    {
+      id: "c1",
+      type: "checkbox",
+      title: "Tím",
+      value: "violet",
+      bg: "#eb11eb",
+    },
+    {
+      id: "c2",
+      type: "checkbox",
+      title: "Vàng",
+      value: "yellow",
+      bg: "#ffff05",
+    },
+    {
+      id: "c3",
+      type: "checkbox",
+      title: "Cam",
+      value: "orange",
+      bg: "#f54105",
+    },
+    { id: "c4", type: "checkbox", title: "Hồng", value: "pink", bg: "#f23895" },
+    { id: "c5", type: "checkbox", title: "Đen", value: "black", bg: "#000000" },
+    { id: "c6", type: "checkbox", title: "Xám", value: "grey", bg: "#cccaca" },
+    {
+      id: "c7",
+      type: "checkbox",
+      title: "Trắng",
+      value: "white",
+      bg: "#fffcfc",
+    },
+    {
+      id: "c8",
+      type: "checkbox",
+      title: "Xanh dương",
+      value: "blue",
+      bg: "#1757eb",
+    },
+    { id: "c9", type: "checkbox", title: "Xanh", value: "xanh", bg: "#099116" },
+    {
+      id: "c10",
+      type: "checkbox",
+      title: "Xanh lá",
+      value: "green",
+      bg: "#52ff52",
+    },
   ];
 
   const handleChangeCheckbox = (id) => {
@@ -118,6 +159,21 @@ const Products = () => {
       }
     });
   };
+  useEffect(() => {
+    price.length > 0 &&
+      (async () => {
+        const res = await dispatch(
+          categoryId === "all-products"
+            ? filterProducts([[...price, ...color, ...size]])
+            : filterProducts([...price, ...color, ...size], categoryId)
+        );
+        setProducts(res.payload);
+      })();
+  }, [color, dispatch, price, size]);
+
+  useEffect(() => {
+    setProducts((prev) => prev.filter((item) => color.includes(item.color)));
+  }, [color]);
 
   const handleDeletePrice = () => {
     setPrice([]);
@@ -251,7 +307,7 @@ const Products = () => {
                                         onChange={() =>
                                           handleChangeCheckbox(item.id)
                                         }
-                                        type={item.type}
+                                        type="checkbox"
                                         id={item.id}
                                       />
                                       <label htmlFor={item.id}>
@@ -282,9 +338,9 @@ const Products = () => {
                                   {checkboxColor.map((item, index) => (
                                     <li key={index}>
                                       <input
-                                        checked={color.includes(item.value)}
+                                        checked={color.includes(item.title)}
                                         onChange={() =>
-                                          handleChangeColor(item.value)
+                                          handleChangeColor(item.title)
                                         }
                                         type={item.type}
                                         id={item.id}
@@ -295,7 +351,7 @@ const Products = () => {
                                           backgroundColor: `${item.bg}`,
                                         }}
                                       >
-                                        {item.value}
+                                        {item.title}
                                       </label>
                                     </li>
                                   ))}
@@ -433,6 +489,13 @@ const Products = () => {
                       )}
                     </div>
                   </div>
+                  {products.length === 0 && (
+                    <Col md={24}>
+                      <div className={cx("collectionNullProducts")}>
+                        <p>Không tìm thấy kết quả. Vui lòng thử lại!</p>
+                      </div>
+                    </Col>
+                  )}
                 </div>
               </div>
               <Collection nameBtn={category} items={products} />

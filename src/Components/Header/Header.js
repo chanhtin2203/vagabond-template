@@ -19,6 +19,8 @@ import { Avatar, Badge, Button, Dropdown, Menu } from "antd";
 import styles from "./Header.module.scss";
 import { useScrollPosition } from "../../Hooks/useScrollPosition";
 import SearchProd from "../SearchProd/SearchProd";
+import { useDispatch } from "react-redux";
+import { getAllProducts } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 
@@ -29,6 +31,12 @@ const Header = () => {
   const [modalSearch, setModalSearch] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "VAGABOND - VAGABOND VIETNAM";
+    dispatch(getAllProducts());
+  }, []);
 
   const checkLoginAndRegister =
     location.pathname.includes("/login") ||
