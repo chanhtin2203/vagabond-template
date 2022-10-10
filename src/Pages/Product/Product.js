@@ -141,40 +141,39 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                             <form>
                               <div className={cx("select")}></div>
                               <div className={cx("select-swatch")}>
-                                {product.size?.length !== "" ||
-                                  (product.size?.length > 0 && (
-                                    <div className={cx("swatch")}>
-                                      <div className={cx("titleSwap")}>
-                                        SIZE:{" "}
-                                      </div>
-                                      <div className={cx("selectSwap")}>
-                                        {product.size?.map((item) => (
-                                          <div
-                                            className={cx("swatchElement")}
-                                            key={item}
-                                          >
-                                            <input
-                                              id={item}
-                                              type="radio"
-                                              value={item}
-                                              checked={size === item}
-                                              onChange={(e) =>
-                                                setSize(e.target.value)
-                                              }
-                                            />
-                                            <label
-                                              htmlFor={item}
-                                              className={
-                                                size === item ? cx("sd") : ""
-                                              }
-                                            >
-                                              <span>{item}</span>
-                                            </label>
-                                          </div>
-                                        ))}
-                                      </div>
+                                {product.size?.length > 0 && (
+                                  <div className={cx("swatch")}>
+                                    <div className={cx("titleSwap")}>
+                                      SIZE:{" "}
                                     </div>
-                                  ))}
+                                    <div className={cx("selectSwap")}>
+                                      {product.size?.map((item, index) => (
+                                        <div
+                                          className={cx("swatchElement")}
+                                          key={item}
+                                        >
+                                          <input
+                                            id={item}
+                                            type="radio"
+                                            value={item}
+                                            checked={size === item}
+                                            onChange={(e) =>
+                                              setSize(e.target.value)
+                                            }
+                                          />
+                                          <label
+                                            htmlFor={item}
+                                            className={
+                                              size === item ? cx("sd") : ""
+                                            }
+                                          >
+                                            <span>{item}</span>
+                                          </label>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                               <div className={cx("select-actions")}>
                                 <div className={cx("quantityArea")}>

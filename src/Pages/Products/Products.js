@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Breadcrumb, Col, Row, Spin } from "antd";
 import classNames from "classnames/bind";
 import React, { Fragment, useEffect, useState } from "react";
@@ -13,7 +14,6 @@ import styles from "./Products.module.scss";
 import {
   getAllProductsRandom,
   getProductsByCategory,
-  getAllProducts,
   filterProducts,
 } from "../../redux/slice/productsSlice";
 
@@ -26,7 +26,7 @@ const Products = () => {
   const [price, setPrice] = useState([]);
   const [size, setSize] = useState([]);
   const [color, setColor] = useState([]);
-  const [activeId, setActiveId] = useState(1);
+  const [sortProducts, setSortProducts] = useState("");
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.products.isLoading);
 
@@ -49,15 +49,13 @@ const Products = () => {
   }, [categoryId]);
 
   const values = [
-    { id: 1, text: "Sản phẩm nổi bật" },
-    { id: 2, text: "Giá: Tăng dần" },
-    { id: 3, text: "Giá: Giảm dần" },
-    { id: 4, text: "Tên: A-Z" },
-    { id: 5, text: "Tên: Z-A" },
-    { id: 6, text: "Cũ nhất" },
-    { id: 7, text: "Mới nhất" },
-    { id: 8, text: "Bán chạy nhất" },
-    { id: 9, text: "Tồn kho giảm dần" },
+    { id: "hot-product", text: "Sản phẩm nổi bật" },
+    { id: "price-asc", text: "Giá: Tăng dần" },
+    { id: "price-desc", text: "Giá: Giảm dần" },
+    { id: "name-asc", text: "Tên: A-Z" },
+    { id: "name-desc", text: "Tên: Z-A" },
+    { id: "product-asc", text: "Cũ nhất" },
+    { id: "product-desc", text: "Mới nhất" },
   ];
 
   const checkboxPrice = [
@@ -131,7 +129,7 @@ const Products = () => {
       if (isChecked) {
         return price.filter((item) => item !== id);
       } else {
-        return [...prev, id];
+        return [id];
       }
     });
   };
@@ -143,7 +141,7 @@ const Products = () => {
       if (isChecked) {
         return size.filter((item) => item !== name);
       } else {
-        return [...prev, name];
+        return [name];
       }
     });
   };
@@ -155,25 +153,59 @@ const Products = () => {
       if (isChecked) {
         return color.filter((item) => item !== value);
       } else {
-        return [...prev, value];
+        return [value];
       }
     });
   };
+
   useEffect(() => {
-    price.length > 0 &&
+    let obj = {};
+    if (price.includes("under100000")) {
+      obj = { lte: 100000, gte: 0 };
+    } else if (price.includes("range:100000_250000")) {
+      obj = { lte: 250000, gte: 100000 };
+    } else if (price.includes("range:250000_500000")) {
+      obj = { lte: 500000, gte: 250000 };
+    } else if (price.includes("range:500000_800000")) {
+      obj = { lte: 800000, gte: 500000 };
+    } else if (price.includes("on800000")) {
+      obj = { lte: 0, gte: 800000 };
+    } else {
+      obj = { lte: "", gte: "" };
+    }
+
+    let sort = {};
+
+    if (sortProducts.includes("hot-product")) {
+      sort = { name: "hot-product", value: "" };
+    } else if (sortProducts.includes("price-asc")) {
+      sort = { name: "price", value: 1 };
+    } else if (sortProducts.includes("price-desc")) {
+      sort = { name: "price", value: -1 };
+    } else if (sortProducts.includes("name-asc")) {
+      sort = { name: "title", value: 1 };
+    } else if (sortProducts.includes("name-desc")) {
+      sort = { name: "title", value: -1 };
+    } else if (sortProducts.includes("product-asc")) {
+      sort = { name: "createdAt", value: 1 };
+    } else if (sortProducts.includes("product-desc")) {
+      sort = { name: "createdAt", value: -1 };
+    } else {
+      sort = { name: "", value: "" };
+    }
+
+    (price.length > 0 || size.length > 0 || sortProducts.length > 0) &&
       (async () => {
         const res = await dispatch(
           categoryId === "all-products"
-            ? filterProducts([[...price, ...color, ...size]])
-            : filterProducts([...price, ...color, ...size], categoryId)
+            ? filterProducts({ obj, size, sort })
+            : filterProducts({ obj, size, categoryId, sort })
         );
         setProducts(res.payload);
       })();
-  }, [color, dispatch, price, size]);
 
-  useEffect(() => {
-    setProducts((prev) => prev.filter((item) => color.includes(item.color)));
-  }, [color]);
+    if (products.length === 0) setProducts(allProducts);
+  }, [categoryId, dispatch, price, size, sortProducts]);
 
   const handleDeletePrice = () => {
     setPrice([]);
@@ -249,9 +281,9 @@ const Products = () => {
                             <ul className={cx("sortByContent")}>
                               {values.map((val) => (
                                 <li
-                                  onClick={() => setActiveId(val.id)}
+                                  onClick={() => setSortProducts(val.id)}
                                   className={
-                                    activeId === val.id
+                                    sortProducts === val.id
                                       ? cx("active")
                                       : "inactive"
                                   }

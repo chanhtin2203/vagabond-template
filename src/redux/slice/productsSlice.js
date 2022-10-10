@@ -44,11 +44,11 @@ export const searchProduct = createAsyncThunk(
 
 export const filterProducts = createAsyncThunk(
   "products/searchProduct",
-  async ([value, category]) => {
+  async (value) => {
     const res = await axios.get(
-      category
-        ? `${BASE_URL}/products/search?filter=${value}&category=${category}`
-        : `${BASE_URL}/products/search?filter=${value}`
+      value.categoryId
+        ? `${BASE_URL}/products/search?lte=${value.obj.lte}&gte=${value.obj.gte}&size=${value.size}&category=${value.categoryId}&sort=${value.sort.name}&value=${value.sort.value}`
+        : `${BASE_URL}/products/search?lte=${value.obj.lte}&gte=${value.obj.gte}&size=${value.size}&sort=${value.sort.name}&value=${value.sort.value}`
     );
     return res.data;
   }
