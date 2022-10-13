@@ -4,7 +4,7 @@ import { BASE_URL } from "./BaseUrl";
 
 const refreshToken = async () => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, {
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, null, {
       withCredentials: true,
     });
     return res.data;

@@ -26,7 +26,7 @@ import {
   deleteProduct,
   increaseProduct,
 } from "../../redux/slice/cartSlice";
-import { logoutUser, loginUser } from "../../redux/slice/userSlice";
+import { logoutUser, loginSuccess } from "../../redux/slice/userSlice";
 import { createAxios } from "../../Utils/createInstance";
 
 const cx = classNames.bind(styles);
@@ -42,8 +42,6 @@ const Header = ({ showCart, setShowCart }) => {
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
   const selectorUser = useSelector((state) => state.users.login);
-
-  let axiosJWT = createAxios(selectorUser, dispatch, loginUser);
 
   useEffect(() => {
     document.title = "VAGABOND - VAGABOND VIETNAM";
@@ -78,9 +76,9 @@ const Header = ({ showCart, setShowCart }) => {
   };
 
   const handleLogout = () => {
+    let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
     dispatch(
       logoutUser({
-        id: selectorUser?._id,
         accessToken: selectorUser?.accessToken,
         axiosJWT,
       })

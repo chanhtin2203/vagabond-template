@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames/bind";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -9,12 +9,13 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { FaRegSadCry } from "react-icons/fa";
 import { BiWinkSmile } from "react-icons/bi";
 import { Form, Input, notification } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/slice/userSlice";
 
 const cx = classNames.bind(styles);
 
 const Login = () => {
+  const selectorUser = useSelector((state) => state.users.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
@@ -48,6 +49,10 @@ const Login = () => {
       navigate("/");
     }
   };
+
+  useEffect(() => {
+    selectorUser !== null && navigate("/");
+  }, []);
   return (
     <div>
       <Header />

@@ -6,6 +6,7 @@ import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import { BiWinkSmile } from "react-icons/bi";
 import { FaRegSadCry } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
@@ -19,6 +20,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [errorsExists, setErrorsExists] = useState({});
   const [valueInput, setValueInput] = useState("");
+  const selectorUser = useSelector((state) => state.users.login);
   const onFinish = async (values) => {
     await axios
       .post(`${BASE_URL}/auth/register`, values)
@@ -57,6 +59,10 @@ const Register = () => {
         }
       });
   };
+
+  useEffect(() => {
+    selectorUser !== null && navigate("/");
+  }, []);
 
   useEffect(() => {
     if (errorsExists?.message?.includes("username")) {
