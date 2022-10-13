@@ -4,6 +4,7 @@ import Products from "./Pages/Products/Products";
 import Product from "./Pages/Product/Product";
 import Cart from "./Pages/Cart/Cart";
 import Login from "./Pages/Login/Login";
+import Checkout from "./Pages/Checkout/Checkout";
 import Register from "./Pages/Register/Register";
 import ScrollToTop from "./Hooks/useScrollToTop";
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/products" element={<ResultSearch />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/checkouts" element={<Checkout />} />
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>

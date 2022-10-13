@@ -190,6 +190,10 @@
   justify-content: space-between;
   padding: 15px 10px;
 
+  & + .mediaLineItem {
+    border-top: 1px solid #f1f1f1;
+  }
+
   .mediaLeft {
     -ms-flex: 0 0 80px;
     flex: 0 0 80px;
@@ -302,8 +306,191 @@
   }
 }
 
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0;
+  overflow-y: scroll;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  &::before {
+    content: " ";
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+  }
+}
+
+.showModal {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.swalModal {
+  width: 478px;
+  opacity: 0;
+  pointer-events: none;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  position: static;
+  margin: 20px auto;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  -webkit-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  z-index: 10001;
+  transition: opacity 0.2s, -webkit-transform 0.3s;
+  transition: transform 0.3s, opacity 0.2s;
+  transition: transform 0.3s, opacity 0.2s, -webkit-transform 0.3s;
+}
+
+.swalModal {
+  padding: 20px 15px 15px;
+  color: #000000;
+  margin-bottom: 50px;
+}
+
+.showModal .swalModal {
+  opacity: 1;
+  pointer-events: auto;
+  box-sizing: border-box;
+  -webkit-animation: showSweetAlert 0.3s;
+  animation: showSweetAlert 0.3s;
+  will-change: transform;
+}
+
+.swalModal.swalCartRemove {
+  max-width: 440px;
+}
+
+.swalText {
+  font-size: 16px;
+  position: relative;
+  float: none;
+  line-height: normal;
+  vertical-align: top;
+  text-align: left;
+  display: inline-block;
+  margin: 0;
+  padding: 0 10px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.64);
+  max-width: calc(100% - 20px);
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.swalText:first-child {
+  margin-top: 45px;
+}
+
+.swalModal .swalText {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
+.swalFooter {
+  text-align: right;
+  padding-top: 13px;
+  margin-top: 13px;
+  padding: 13px 16px;
+  border-radius: inherit;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.swalModal .swalFooter {
+  text-align: center;
+  padding: 8px 0px;
+}
+
+.swalModal.swalCartRemove .swalFooter {
+  text-align: center;
+  padding: 8px 0px;
+}
+
+.swalButtonContainer {
+  margin: 5px;
+  display: inline-block;
+  position: relative;
+}
+
+.swalButton {
+  background-color: #7cd1f9;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.swalButtonCancel {
+  color: #555;
+  background-color: #efefef;
+}
+
+.swalFooter .swalButton {
+  position: relative;
+  display: inline-block;
+  min-width: 110px;
+  padding: 10px 25px;
+  line-height: normal;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 1px;
+  background-color: transparent;
+  -webkit-transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  z-index: 1;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.swalButton.swalButtonCancel {
+  border: 1px solid #dfdfdf;
+  background-color: #dfdfdf;
+  color: #000000;
+}
+
+.swalButton.swalButtonConfirm {
+  border: 1px solid #2c2c2c;
+  background-color: #2c2c2c;
+  color: #fff;
+}
+.payment {
+  p {
+    list-style: none;
+  }
+}
 @media (min-width: 992px) {
-  .sidebarCartSticky {
+  .wrapperMainCart .sidebarCartSticky {
     position: -webkit-sticky;
     position: sticky;
     top: 95px;

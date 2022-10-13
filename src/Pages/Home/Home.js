@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Carousel, message } from "antd";
 import classNames from "classnames/bind";
 import Footer from "../../Components/Footer/Footer";
@@ -7,36 +7,53 @@ import Header from "../../Components/Header/Header";
 import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
 import Collection from "../../Components/Collection/Collection";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { getAllProducts } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 
 const Home = () => {
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.products.products);
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, []);
 
   const handleClick = () => {
     message.warning("Chức năng sẽ có trong tương lai !!!");
   };
 
-  const backpacks = products
-    .filter((product) => product.category.includes("backpacks"))
-    .slice(0, 10);
-  const jacket = products
-    .filter((product) => product.category.includes("jacket"))
-    .slice(0, 10);
-  const tee = products
-    .filter((product) => product.category.includes("tee"))
-    .slice(0, 10);
-  const bag = products
-    .filter((product) => product.category.includes("bag"))
-    .slice(0, 10);
-  const wallets = products
-    .filter((product) => product.category.includes("wallets"))
-    .slice(0, 10);
-  const pants = products
-    .filter((product) => product.category.includes("quan"))
-    .slice(0, 10);
+  // const productFilter = products.reduce(
+  //   function (r, item) {
+  //     let current = r.hash[item.category];
+  //     if (!current) {
+  //       current = r.hash[item.category] = {
+  //         category: item.category,
+  //         subCategory: item.subCategory,
+  //         items: [],
+  //       };
+  //       r.arr.push(current);
+  //     }
+  //     current.items.push({
+  //       ...item,
+  //     });
+  //     return r;
+  //   },
+  //   { hash: {}, arr: [] }
+  // ).arr;
 
+  const productFilter = products.reduce(
+    (prev, { category, subCategory, ...items }) => {
+      const id = prev.findIndex((item) => item.category === category);
+      id >= 0
+        ? prev[id].items.push(items)
+        : prev.push({ category, subCategory, items: [items] });
+      return prev;
+    },
+    []
+  );
   return (
     <div>
       <Header />
@@ -44,7 +61,7 @@ const Home = () => {
         <section className={cx("sectionSlide")}>
           <div className="container">
             <Carousel>
-              <Link to={"/all-products"}>
+              <Link to={"/collections/all-products"}>
                 <img
                   src="https://file.hstatic.net/1000281824/file/z3605342700333_e0573e4fd541ce01b187bfed5792184e_d6f9b4c3708148738c2199dd25fcaf6f.jpg"
                   alt=""
@@ -140,20 +157,14 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <Collection
-          title={"BACKPACKS | BALO"}
-          href={"backpacks"}
-          items={backpacks}
-        />
-        <Collection
-          title={"ÁO KHOÁC | JACKET"}
-          href={"jacket"}
-          items={jacket}
-        />
-        <Collection title={"ÁO THUN | TSHIRT"} href={"tee"} items={tee} />
-        <Collection title={"TÚI | BAG"} href={"bag"} items={bag} />
-        <Collection title={"WALLETS | VÍ"} href={"wallets"} items={wallets} />
-        <Collection title={"PANTS | QUẦN"} href={"quan"} items={pants} />
+        {productFilter.map((item, index) => (
+          <Collection
+            key={index}
+            title={item.subCategory}
+            href={item.category}
+            items={item.items.slice(0, 10)}
+          />
+        ))}
       </main>
       <Footer />
     </div>

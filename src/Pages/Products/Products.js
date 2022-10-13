@@ -41,8 +41,8 @@ const Products = () => {
         const res = await dispatch(getProductsByCategory(categoryId));
         setProducts(res.payload);
         setAllProducts(res.payload);
-        const { subCategory } = res.payload.find((item) => item);
-        setCategory(subCategory);
+        const { category, subCategory } = res.payload.find((item) => item);
+        setCategory(subCategory || category);
       }
     };
     fetchingProducts();

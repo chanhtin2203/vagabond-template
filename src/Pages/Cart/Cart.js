@@ -1,14 +1,56 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { Breadcrumb, Col, Row } from "antd";
+import { Breadcrumb, Col, Radio, Row } from "antd";
 import classNames from "classnames/bind";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
+import Portal from "../../Components/Portal/Portal";
+import {
+  decreaseProduct,
+  deleteProduct,
+  increaseProduct,
+} from "../../redux/slice/cartSlice";
 import styles from "./Cart.module.scss";
 
 const cx = classNames.bind(styles);
 const Cart = () => {
+  const [showModalRemove, setShowModalRemove] = useState(false);
+  const [payment, setPayment] = useState("COD");
+  const [productRemove, setProductRemove] = useState([]);
+  const cart = useSelector((state) => state.carts.products);
+  const total = useSelector((state) => state.carts.total);
+  const quantity = cart.map((item) => item.quantity).reduce((a, b) => a + b, 0);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleClick = (e, value, type) => {
+    e.preventDefault();
+    if (type === "Dec") {
+      value.quantity > 1 && dispatch(decreaseProduct(value));
+    } else dispatch(increaseProduct(value));
+  };
+
+  const handleDeleteCart = () => {
+    dispatch(deleteProduct(productRemove));
+    setShowModalRemove(false);
+  };
+
+  const handleRemoveCart = (item) => {
+    setProductRemove(item);
+    setShowModalRemove(true);
+  };
+
+  const handleChangePayment = (e) => {
+    setPayment(e.target.value);
+  };
+
+  const handleClickPayment = () => {
+    if (payment === "COD") navigate("/checkouts");
+  };
+
   return (
     <div>
       <Header />
@@ -45,71 +87,106 @@ const Cart = () => {
                         <h1>Giỏ hàng của bạn</h1>
                       </div>
                       {/* Empty cart */}
-                      {/* <div className={cx("expandedMessage")}>
-                        Giỏ hàng của bạn đang trống
-                      </div> */}
-                      <div className={cx("listCart")}>
-                        <form>
-                          <div className={cx("cartRow")}>
-                            <p className={cx("titleNumberCart")}>
-                              Bạn đang có
-                              <strong class="count-cart"> 1 sản phẩm </strong>
-                              trong giỏ hàng
-                            </p>
-                            <div className={cx("tableCart")}>
-                              <div className={cx("mediaLineItem")}>
-                                <div className={cx("mediaLeft")}>
-                                  <div className={cx("item-img")}>
-                                    <img
-                                      src="  //product.hstatic.net/1000281824/product/300_e2b80b862fd2499f858a17736ac4a613_medium.jpg"
-                                      alt="Basic Backpack Degrey Xám - BBD Xám"
-                                    />
-                                  </div>
-                                  <div className={cx("itemRemove")}>
-                                    <Link to={"#"}>Xóa</Link>
-                                  </div>
-                                </div>
-                                <div className={cx("mediaRight")}>
-                                  <div className={cx("itemInfo")}>
-                                    <h3 className={cx("itemTitle")}>
-                                      <Link to={"#"}>
-                                        Basic Backpack Degrey Xám - BBD Xám
-                                      </Link>
-                                    </h3>
-                                  </div>
-                                  <div className={cx("itemPrice")}>
-                                    <p>
-                                      <span>420,000₫</span>
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className={cx("mediaTotal")}>
-                                  <div className={cx("itemTotalPrice")}>
-                                    <span class={cx("lineItemTotal")}>
-                                      420,000₫
-                                    </span>
-                                  </div>
-                                  <div className={cx("itemQty")}>
-                                    <div className={cx("quantityPartent")}>
-                                      <button className={cx("qtyBtn")}>
-                                        -
-                                      </button>
-                                      <input
-                                        type="text"
-                                        defaultValue={1}
-                                        className={cx("itemQuantity")}
-                                      />
-                                      <button className={cx("qtyBtn")}>
-                                        +
-                                      </button>
+                      {cart.length === 0 && (
+                        <div className={cx("expandedMessage")}>
+                          Giỏ hàng của bạn đang trống
+                        </div>
+                      )}
+                      {cart.length > 0 && (
+                        <div className={cx("listCart")}>
+                          <form>
+                            <div className={cx("cartRow")}>
+                              <p className={cx("titleNumberCart")}>
+                                Bạn đang có
+                                <strong className="count-cart">
+                                  {" "}
+                                  {quantity} sản phẩm{" "}
+                                </strong>
+                                trong giỏ hàng
+                              </p>
+                              <div className={cx("tableCart")}>
+                                {cart.map((item) => (
+                                  <div
+                                    className={cx("mediaLineItem")}
+                                    key={item._id}
+                                  >
+                                    <div className={cx("mediaLeft")}>
+                                      <div className={cx("item-img")}>
+                                        <img
+                                          src={item.image}
+                                          alt={item.title}
+                                        />
+                                      </div>
+                                      <div className={cx("itemRemove")}>
+                                        <a
+                                          onClick={() => handleRemoveCart(item)}
+                                        >
+                                          Xóa
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div className={cx("mediaRight")}>
+                                      <div className={cx("itemInfo")}>
+                                        <h3 className={cx("itemTitle")}>
+                                          <Link to={`/products/${item._id}`}>
+                                            {item.title}
+                                          </Link>
+                                        </h3>
+                                      </div>
+                                      <div className={cx("itemPrice")}>
+                                        <p>
+                                          <span>
+                                            {new Intl.NumberFormat("vi-VN", {
+                                              style: "currency",
+                                              currency: "VND",
+                                            }).format(item.price)}
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className={cx("mediaTotal")}>
+                                      <div className={cx("itemTotalPrice")}>
+                                        <span className={cx("lineItemTotal")}>
+                                          {new Intl.NumberFormat("vi-VN", {
+                                            style: "currency",
+                                            currency: "VND",
+                                          }).format(item.price * item.quantity)}
+                                        </span>
+                                      </div>
+                                      <div className={cx("itemQty")}>
+                                        <div className={cx("quantityPartent")}>
+                                          <button
+                                            className={cx("qtyBtn")}
+                                            onClick={(e) =>
+                                              handleClick(e, item, "Dec")
+                                            }
+                                          >
+                                            -
+                                          </button>
+                                          <input
+                                            type="text"
+                                            value={item.quantity}
+                                            readOnly
+                                            className={cx("itemQuantity")}
+                                          />
+                                          <button
+                                            className={cx("qtyBtn")}
+                                            onClick={(e) =>
+                                              handleClick(e, item, "Inc")
+                                            }
+                                          >
+                                            +
+                                          </button>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                ))}
                               </div>
                             </div>
-                          </div>
-                        </form>
-                      </div>
+                          </form>
+                        </div>
+                      )}
                     </div>
                   </Col>
                   <Col
@@ -126,7 +203,13 @@ const Cart = () => {
                         <div className={cx("sumaryTotal")}>
                           <p>
                             Tổng tiền:
-                            <span> 0₫</span>
+                            <span>
+                              {" "}
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(total)}
+                            </span>
                           </p>
                         </div>
                         <div className={cx("sumaryAction")}>
@@ -134,24 +217,37 @@ const Cart = () => {
                           <p>
                             Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.
                           </p>
-                          <div
-                            className={cx(
-                              "sumaryAlert",
-                              "alertDanger",
-                              "alert"
-                            )}
-                          >
-                            Giỏ hàng của bạn hiện chưa đạt mức tối thiểu để
-                            thanh toán.
+                          {cart.length === 0 && (
+                            <div
+                              className={cx(
+                                "sumaryAlert",
+                                "alertDanger",
+                                "alert"
+                              )}
+                            >
+                              Giỏ hàng của bạn hiện chưa đạt mức tối thiểu để
+                              thanh toán.
+                            </div>
+                          )}
+                          <div className={cx("payment")}>
+                            <Radio.Group
+                              onChange={handleChangePayment}
+                              value={payment}
+                            >
+                              <Radio value={"COD"}>Ship COD</Radio>
+                              <Radio value={"payment"}>
+                                Thanh toán bằng thẻ
+                              </Radio>
+                            </Radio.Group>
                           </div>
                           <div className={cx("sumaryButton")}>
                             <a
-                              href="#/"
                               className={cx(
                                 "checkoutBtn",
                                 "btnRed",
-                                "disabled"
+                                cart.length === 0 && "disabled"
                               )}
+                              onClick={handleClickPayment}
                             >
                               THANH TOÁN
                             </a>
@@ -184,6 +280,35 @@ const Cart = () => {
         </div>
       </main>
       <Footer />
+      {showModalRemove && (
+        <Portal>
+          <div className={cx("showModal", "modalOverlay")}>
+            <div className={cx("swalModal", "swalCartRemove")}>
+              <div className={cx("swalText")}>
+                Bạn chắc chắn muốn bỏ sản phẩm này ra khỏi giỏ hàng?
+              </div>
+              <div className={cx("swalFooter")}>
+                <div className={cx("swalButtonContainer")}>
+                  <button
+                    className={cx("swalButton", "swalButtonCancel")}
+                    onClick={() => setShowModalRemove(false)}
+                  >
+                    Hủy
+                  </button>
+                </div>
+                <div className={cx("swalButtonContainer")}>
+                  <button
+                    className={cx("swalButton", "swalButtonConfirm")}
+                    onClick={handleDeleteCart}
+                  >
+                    Đồng ý
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      )}
     </div>
   );
 };

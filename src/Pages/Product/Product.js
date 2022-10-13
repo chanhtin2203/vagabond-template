@@ -10,6 +10,7 @@ import styles from "./Product.module.scss";
 import Slider from "react-slick";
 import { getDetailProduct } from "../../redux/slice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../../redux/slice/cartSlice";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
@@ -19,6 +20,8 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   const [category, setCategory] = useState("");
   const [clicked, setClicked] = useState(true);
   const [clickedService, setClickedService] = useState(false);
+  const [clickedShowCart, setClickedShowCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const product = useSelector((state) => state.products.product);
   const loading = useSelector((state) => state.products.isLoading);
@@ -26,7 +29,8 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   useEffect(() => {
     const getDetail = async () => {
       const res = await dispatch(getDetailProduct(id));
-      const { category } = res.payload;
+      const { category, size } = res.payload;
+      setSize(size[0]);
       setCategory(category);
       setBreadcrumb(
         category === "tee" || category === "jacket"
@@ -37,7 +41,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
       );
     };
     getDetail();
-  }, []);
+  }, [dispatch, id]);
 
   const SlickArrowLeft = ({ currentSlide, slideCount, ...props }) => (
     <GrFormPrevious
@@ -93,9 +97,23 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
     ],
   };
 
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1);
+    } else {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleAddCart = (e) => {
+    e.preventDefault();
+    dispatch(addProduct({ ...product, quantity, size }));
+    setClickedShowCart(true);
+  };
+
   return (
     <div>
-      <Header />
+      <Header showCart={clickedShowCart} setShowCart={setClickedShowCart} />
       <main className="minHeightBody">
         <Skeleton loading={loading}>
           <div className={cx("layoutDetailProducts")}>
@@ -181,21 +199,26 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                                     type="button"
                                     value="-"
                                     className={cx("qtyBtn")}
+                                    onClick={() => handleQuantity("dec")}
                                   />
                                   <input
                                     type="text"
-                                    defaultValue={1}
-                                    min={1}
+                                    value={quantity}
+                                    onChange={(e) =>
+                                      setQuantity(e.target.value)
+                                    }
                                     className={cx("quantityInput")}
                                   />
                                   <input
                                     type="button"
                                     value="+"
                                     className={cx("qtyBtn")}
+                                    onClick={() => handleQuantity("inc")}
                                   />
                                 </div>
                                 <div className={cx("addCartArea")}>
                                   <button
+                                    onClick={handleAddCart}
                                     className={cx("button", "btnAddToCart")}
                                   >
                                     <span>Thêm vào giỏ</span>

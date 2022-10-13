@@ -269,6 +269,30 @@
   text-align: center;
 }
 
+.miniCartRemove {
+  position: absolute;
+  right: 0px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+
+  a {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background: #f4f6fb;
+    display: block;
+    color: #000000;
+
+    svg {
+      width: 10px;
+      height: 20px;
+    }
+  }
+}
+
 .miniCartItem:last-child {
   border-bottom: 0;
 }

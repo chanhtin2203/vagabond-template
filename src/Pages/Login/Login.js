@@ -3,14 +3,50 @@ import classNames from "classnames/bind";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import styles from "./Login.module.scss";
-import { Link } from "react-router-dom";
-import { Form, Input } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineUser } from "react-icons/ai";
+import { RiLockPasswordLine } from "react-icons/ri";
+import { FaRegSadCry } from "react-icons/fa";
+import { BiWinkSmile } from "react-icons/bi";
+import { Form, Input, notification } from "antd";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/slice/userSlice";
 
 const cx = classNames.bind(styles);
 
 const Login = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const onFinish = async (values) => {
+    const res = await dispatch(loginUser(values));
+    if (res.type.includes("rejected")) {
+      notification.open({
+        duration: 1.5,
+        message: "Thông báo",
+        description: "Đăng nhập không thành công",
+        icon: (
+          <FaRegSadCry
+            style={{
+              color: "#108ee9",
+            }}
+          />
+        ),
+      });
+    } else {
+      notification.open({
+        duration: 1,
+        message: "Thông báo",
+        description: "Đăng nhập thành công",
+        icon: (
+          <BiWinkSmile
+            style={{
+              color: "#108ee9",
+            }}
+          />
+        ),
+      });
+      navigate("/");
+    }
   };
   return (
     <div>
@@ -33,11 +69,18 @@ const Login = () => {
                   autoComplete="off"
                 >
                   <Form.Item className={cx("largeForm")} name="username">
-                    <Input type="text" placeholder="Tên đăng nhập" />
+                    <Input
+                      type="text"
+                      placeholder="Tên đăng nhập"
+                      prefix={<AiOutlineUser />}
+                    />
                   </Form.Item>
 
                   <Form.Item className={cx("largeForm")} name="password">
-                    <Input.Password placeholder="Mật khẩu" />
+                    <Input.Password
+                      placeholder="Mật khẩu"
+                      prefix={<RiLockPasswordLine />}
+                    />
                   </Form.Item>
 
                   <div className={cx("largeForm", "siteboxRecaptcha")}>

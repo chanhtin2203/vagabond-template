@@ -14,7 +14,15 @@ const SearchProd = ({ setModalSearch }) => {
   const [resultSearch, setResultSearch] = useState([]);
   const product = useSelector((state) => state.products.products);
 
-  const category = [...new Set(product.map((i) => i.subCategory))];
+  const result = product.map((value) => ({
+    category: value.category,
+    subCategory: value.subCategory,
+  }));
+
+  function getUniqueListBy(arr, key) {
+    return [...new Map(arr.map((item) => [item[key], item])).values()];
+  }
+  const category = getUniqueListBy(result, "category");
 
   const debounceValue = useDebounce(searchValue, 500);
 
@@ -85,6 +93,21 @@ const SearchProd = ({ setModalSearch }) => {
               {debounceValue && resultSearch.length === 0 && (
                 <p className={cx("dataEmpty")}>Không có sản phẩm nào...</p>
               )}
+            </div>
+            <div className={cx("searchSuggest", "showSuggest")}>
+              <p>Gợi ý cho bạn:</p>
+              <ul>
+                {category.map((cat, index) => (
+                  <li key={index}>
+                    <Link
+                      to={`/collections/${cat.category}`}
+                      onClick={() => setModalSearch(false)}
+                    >
+                      {cat.subCategory}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
