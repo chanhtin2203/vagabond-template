@@ -107,6 +107,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
 
   const handleAddCart = (e) => {
     e.preventDefault();
+    console.log({ ...product, quantity, size });
     dispatch(addProduct({ ...product, quantity, size }));
     setClickedShowCart(true);
   };

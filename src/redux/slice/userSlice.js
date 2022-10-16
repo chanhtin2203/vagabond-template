@@ -3,9 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseUrl";
 
 export const loginUser = createAsyncThunk("user/loginUser", async (user) => {
-  const res = await axios.post(`${BASE_URL}/auth/login`, user, {
-    withCredentials: true,
-  });
+  const res = await axios.post(`${BASE_URL}/auth/login`, user);
   return res.data;
 });
 
@@ -14,7 +12,6 @@ export const logoutUser = createAsyncThunk(
   async ({ accessToken, axiosJWT }) => {
     const res = await axiosJWT.post(`${BASE_URL}/auth/logout`, null, {
       headers: { token: `Beaer ${accessToken}` },
-      withCredentials: true,
     });
     return res.data;
   }
@@ -38,7 +35,9 @@ const user = createSlice({
     },
     [loginUser.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.login = action.payload;
+      action.payload.message
+        ? (state.login = null)
+        : (state.login = action.payload);
     },
     [loginUser.rejected]: (state) => {
       state.isLoading = false;

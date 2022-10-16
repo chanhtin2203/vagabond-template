@@ -1,0 +1,380 @@
+.content {
+  overflow-x: hidden;
+}
+
+.content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  height: 100vh;
+}
+
+.wrap {
+  margin: 0 auto;
+  max-width: 40em;
+  zoom: 1;
+
+  &::before,
+  &::after {
+    content: "";
+    display: table;
+  }
+}
+
+.content .wrap,
+.content .main {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+
+.sidebar {
+  position: relative;
+  color: #717171;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 300%;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    bottom: 0;
+    background: #fafafa;
+    z-index: -1;
+    box-shadow: 0 -1px 0 #e1e1e1 inset;
+  }
+}
+
+.orderSumarySection {
+  border-top: 1px solid;
+  padding-top: 1.5em;
+  padding-bottom: 1em;
+  border-color: #e1e1e1;
+}
+
+.orderSumarySection:first-child {
+  border-top: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+}
+
+td {
+  &:last-child {
+    text-align: left;
+  }
+}
+th {
+  padding: 0;
+  padding-left: 1em;
+
+  &:first-child {
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .visually-hidden {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    clip: rect(0 0 0 0);
+    width: 2px;
+    height: 2px;
+    margin: -2px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+  }
+}
+td,
+th {
+  padding: 0;
+  padding-left: 1em;
+}
+
+td:first-child,
+th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+.product {
+  td {
+    padding-top: 1em;
+  }
+  .productDescription {
+    width: 100%;
+  }
+}
+.product:first-child {
+  td {
+    padding-top: 0;
+  }
+}
+.productThumbnail {
+  width: 4.6em;
+  height: 4.6em;
+  border-radius: 8px;
+  background: #fff;
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 10%) inset;
+  }
+}
+
+.productThumbnailWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+
+  .productThumbnailImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+  }
+}
+
+.productThumbnailQuantity {
+  font-size: 0.85714em;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.15em 0.65em;
+  border-radius: 2em;
+  background-color: rgba(153, 153, 153, 0.9);
+  color: #fff;
+  position: absolute;
+  right: -0.75em;
+  top: -0.75em;
+  z-index: 2;
+}
+.productDescription {
+  .productDescriptionName,
+  .productDescriptionVariant {
+    display: block;
+  }
+}
+
+.orderSummaryEmphasis {
+  font-weight: 500;
+  color: #4b4b4b;
+}
+
+.orderSummarySmallText {
+  font-size: 0.85714em;
+  color: #969696;
+}
+.visuallyHidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  clip: rect(0 0 0 0);
+  width: 2px;
+  height: 2px;
+  margin: -2px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+.productPrice {
+  .orderSummaryEmphasis {
+    font-weight: 500;
+    color: #4b4b4b;
+  }
+}
+
+.paymentLines {
+  padding-top: 1em !important;
+}
+
+.totalLine {
+  td {
+    padding-top: 0.75em;
+  }
+  .totalLineName {
+  }
+
+  td:last-child,
+  th:last-child {
+    text-align: right;
+  }
+}
+
+.totalLineTableFooter {
+  white-space: nowrap;
+}
+
+.totalLineTableFooter {
+  .totalLine {
+    td {
+      padding-top: 3em;
+      position: relative;
+
+      &::before {
+        background-color: #e1e1e1;
+        content: "";
+        position: absolute;
+        top: 1.5em;
+        left: 0;
+        width: 100%;
+        height: 1px;
+      }
+    }
+    td:first-child,
+    th:first-child {
+      padding-left: 0;
+      text-align: left;
+    }
+    .paymentDueLabelTotal {
+      font-size: 1.14286em;
+      color: #4b4b4b;
+    }
+
+    .paymentDueCurrency {
+      font-size: 0.85714em;
+      vertical-align: 0.2em;
+      margin-right: 0.5em;
+      color: #969696;
+    }
+
+    .paymentDuePrice {
+      font-size: 1.71429em;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: #4b4b4b;
+      line-height: 1em;
+    }
+  }
+}
+
+.logoText {
+  color: #333333;
+}
+
+.mainContent {
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+
+.stepActions {
+  position: relative;
+  z-index: 3;
+}
+
+.section {
+  position: relative;
+  padding-top: 2em;
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.sectionHeader {
+  position: relative;
+}
+
+.sectionTitle {
+  color: #333333;
+  font-weight: bold;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@media (min-width: 1000px) {
+  .wrap {
+    width: 90%;
+    max-width: 78.57143em;
+  }
+  .content .wrap {
+    -webkit-flex-direction: row-reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+  }
+  .sidebar {
+    // width: 38%;
+    padding-left: 4%;
+    background-position: left top;
+    float: right;
+  }
+  .sidebar,
+  .main {
+    padding-top: 4em;
+
+    &::after {
+      left: 0;
+      background-position: left top;
+      box-shadow: 1px 0 0 #e1e1e1 inset;
+    }
+  }
+  .orderSumarySection:first-child {
+    padding-top: 0;
+  }
+  .main {
+    width: 52%;
+    padding-right: 6%;
+    float: left;
+
+    .mainHeader {
+      padding-bottom: 1em;
+
+      .logo {
+        display: block;
+      }
+    }
+    .mainContent {
+      padding-bottom: 4em;
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .main {
+    padding-top: 1.5em;
+  }
+  h1 {
+    font-size: 2em;
+  }
+  .section {
+    padding-top: 3em;
+
+    .sectionHeader {
+      margin-bottom: 1.5em;
+    }
+  }
+}

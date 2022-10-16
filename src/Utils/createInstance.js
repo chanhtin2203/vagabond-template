@@ -2,11 +2,10 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { BASE_URL } from "./BaseUrl";
 
+axios.defaults.withCredentials = true;
 const refreshToken = async () => {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, null, {
-      withCredentials: true,
-    });
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, null);
     return res.data;
   } catch (error) {
     console.log(error);

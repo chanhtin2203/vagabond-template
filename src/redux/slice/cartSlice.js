@@ -8,55 +8,59 @@ const cartSlice = createSlice({
   },
   reducers: {
     addProduct: (state, action) => {
-      const productId = state.products.find(
-        (p) => p._id === action.payload._id
+      let { _id, size } = action.payload;
+      const itemIndex = state.products.findIndex(
+        (item) => item._id === _id && item.size === size
       );
-      if (!productId) {
-        state.products.push(action.payload);
+      if (itemIndex !== -1) {
+        state.products[itemIndex].quantity += action.payload.quantity;
       } else {
-        let newCart = state.products;
-        const objIndex = newCart.findIndex(
-          (obj) => obj._id === action.payload._id
-        );
-        if (newCart[objIndex].quantity === undefined) {
-          newCart[objIndex].quantity = 2;
-        } else {
-          newCart[objIndex].quantity =
-            newCart[objIndex].quantity + action.payload.quantity;
-        }
-        state.products = [...newCart];
+        state.products.push({
+          ...action.payload,
+        });
       }
       state.total += action.payload.price * action.payload.quantity;
     },
-    deleteProduct: (state, action) => {
-      let newCart = state.products;
-      const objIndex = newCart.findIndex(
-        (obj) => obj._id === action.payload._id
+    deleteProduct: (state, { payload }) => {
+      const found = state.products.findIndex(
+        ({ _id, size }) => _id === payload._id && size === payload.size
       );
-      newCart.splice(objIndex, 1);
-      state.products = [...newCart];
-      state.total -= action.payload.price * action.payload.quantity;
+      if (found !== -1) {
+        state.products.splice(found, 1);
+      }
+      state.total -= payload.price * payload.quantity;
     },
-    increaseProduct: (state, action) => {
-      let newCart = state.products;
-      const objIndex = newCart.findIndex(
-        (obj) => obj._id === action.payload._id
+    increaseProduct: (state, { payload }) => {
+      const found = state.products.findIndex(
+        ({ _id, size }) => _id === payload._id && size === payload.size
       );
-      newCart[objIndex].quantity += 1;
-      state.total += action.payload.price;
+      if (found !== -1) {
+        state.products[found].quantity++;
+      }
+      state.total += payload.price;
     },
-    decreaseProduct: (state, action) => {
-      let newCart = state.products;
-      const objIndex = newCart.findIndex(
-        (obj) => obj._id === action.payload._id
+    decreaseProduct: (state, { payload }) => {
+      const found = state.products.findIndex(
+        ({ _id, size }) => _id === payload._id && size === payload.size
       );
-      newCart[objIndex].quantity -= 1;
-      state.total -= action.payload.price;
+      if (found !== -1) {
+        state.products[found].quantity--;
+      }
+      state.total -= payload.price;
+    },
+    deleteAllCart: (state) => {
+      state.products = [];
+      state.total = 0;
     },
   },
 });
 
-export const { addProduct, deleteProduct, increaseProduct, decreaseProduct } =
-  cartSlice.actions;
+export const {
+  addProduct,
+  deleteProduct,
+  increaseProduct,
+  decreaseProduct,
+  deleteAllCart,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

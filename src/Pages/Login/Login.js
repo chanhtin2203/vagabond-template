@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -15,12 +15,16 @@ import { loginUser } from "../../redux/slice/userSlice";
 const cx = classNames.bind(styles);
 
 const Login = () => {
+  const [form] = Form.useForm();
+  const [errorsExists, setErrorsExists] = useState({});
+  const [valueInput, setValueInput] = useState("");
   const selectorUser = useSelector((state) => state.users.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
     const res = await dispatch(loginUser(values));
-    if (res.type.includes("rejected")) {
+    if (res.payload.message) {
+      setErrorsExists(res.payload);
       notification.open({
         duration: 1.5,
         message: "Thông báo",
@@ -46,13 +50,26 @@ const Login = () => {
           />
         ),
       });
-      navigate("/");
+      navigate(-1);
     }
   };
 
   useEffect(() => {
     selectorUser !== null && navigate("/");
   }, []);
+
+  useEffect(() => {
+    if (errorsExists?.message?.includes("username")) {
+      form.validateFields(["username"]);
+    }
+    if (errorsExists?.message?.includes("password")) {
+      form.validateFields(["password"]);
+    }
+  }, [errorsExists?.message, form]);
+
+  useEffect(() => {
+    setErrorsExists({});
+  }, [valueInput]);
   return (
     <div>
       <Header />
@@ -69,22 +86,61 @@ const Login = () => {
                 </div>
                 <Form
                   name="login"
+                  form={form}
                   initialValues={{}}
                   onFinish={onFinish}
                   autoComplete="off"
                 >
-                  <Form.Item className={cx("largeForm")} name="username">
+                  <Form.Item
+                    className={cx("largeForm")}
+                    name="username"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập tên đăng nhập!",
+                      },
+                      {
+                        validator: () => {
+                          if (errorsExists?.message?.includes("username")) {
+                            return Promise.reject("Sai tên đăng nhập!");
+                          } else {
+                            return Promise.resolve();
+                          }
+                        },
+                      },
+                    ]}
+                  >
                     <Input
                       type="text"
                       placeholder="Tên đăng nhập"
                       prefix={<AiOutlineUser />}
+                      onChange={(e) => setValueInput(e.target.value)}
                     />
                   </Form.Item>
 
-                  <Form.Item className={cx("largeForm")} name="password">
+                  <Form.Item
+                    className={cx("largeForm")}
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập mật khẩu!",
+                      },
+                      {
+                        validator: () => {
+                          if (errorsExists?.message?.includes("password")) {
+                            return Promise.reject("Sai mật khẩu!");
+                          } else {
+                            return Promise.resolve();
+                          }
+                        },
+                      },
+                    ]}
+                  >
                     <Input.Password
                       placeholder="Mật khẩu"
                       prefix={<RiLockPasswordLine />}
+                      onChange={(e) => setValueInput(e.target.value)}
                     />
                   </Form.Item>
 

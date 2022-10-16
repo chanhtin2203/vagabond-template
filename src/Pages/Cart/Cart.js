@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { Breadcrumb, Col, Radio, Row } from "antd";
+import { Breadcrumb, Col, Popconfirm, Radio, Row } from "antd";
 import classNames from "classnames/bind";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import Portal from "../../Components/Portal/Portal";
@@ -22,6 +22,7 @@ const Cart = () => {
   const [productRemove, setProductRemove] = useState([]);
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
+  const user = useSelector((state) => state.users.login);
   const quantity = cart.map((item) => item.quantity).reduce((a, b) => a + b, 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +50,10 @@ const Cart = () => {
 
   const handleClickPayment = () => {
     if (payment === "COD") navigate("/checkouts");
+  };
+
+  const handleClickLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -105,10 +110,10 @@ const Cart = () => {
                                 trong giỏ hàng
                               </p>
                               <div className={cx("tableCart")}>
-                                {cart.map((item) => (
+                                {cart.map((item, index) => (
                                   <div
                                     className={cx("mediaLineItem")}
-                                    key={item._id}
+                                    key={index}
                                   >
                                     <div className={cx("mediaLeft")}>
                                       <div className={cx("item-img")}>
@@ -131,6 +136,9 @@ const Cart = () => {
                                           <Link to={`/products/${item._id}`}>
                                             {item.title}
                                           </Link>
+                                          <div className={cx("itemVariant")}>
+                                            <span>{item.size}</span>
+                                          </div>
                                         </h3>
                                       </div>
                                       <div className={cx("itemPrice")}>
@@ -240,18 +248,33 @@ const Cart = () => {
                               </Radio>
                             </Radio.Group>
                           </div>
-                          <div className={cx("sumaryButton")}>
-                            <a
-                              className={cx(
-                                "checkoutBtn",
-                                "btnRed",
-                                cart.length === 0 && "disabled"
-                              )}
-                              onClick={handleClickPayment}
-                            >
-                              THANH TOÁN
-                            </a>
-                          </div>
+                          {user !== null ? (
+                            <div className={cx("sumaryButton")}>
+                              <a
+                                className={cx(
+                                  "checkoutBtn",
+                                  "btnRed",
+                                  cart.length === 0 && "disabled"
+                                )}
+                                onClick={handleClickPayment}
+                              >
+                                THANH TOÁN
+                              </a>
+                            </div>
+                          ) : (
+                            <div className={cx("sumaryButton")}>
+                              <a
+                                className={cx(
+                                  "checkoutBtn",
+                                  "btnRed",
+                                  cart.length === 0 && "disabled"
+                                )}
+                                onClick={handleClickLogin}
+                              >
+                                Đăng nhập để thanh toán
+                              </a>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div

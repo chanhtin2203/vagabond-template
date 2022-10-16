@@ -20,10 +20,12 @@ const Register = () => {
   const navigate = useNavigate();
   const [errorsExists, setErrorsExists] = useState({});
   const [valueInput, setValueInput] = useState("");
+  const [textInput, setTextInput] = useState("");
   const selectorUser = useSelector((state) => state.users.login);
   const onFinish = async (values) => {
+    const data = { ...values, fullname: textInput };
     await axios
-      .post(`${BASE_URL}/auth/register`, values)
+      .post(`${BASE_URL}/auth/register`, data)
       .then((result) => {
         if (result.data) {
           notification.open({
@@ -77,6 +79,19 @@ const Register = () => {
     setErrorsExists({});
   }, [valueInput]);
 
+  const handleChangeText = (e) => {
+    setTextInput(
+      e.target.value.replace(
+        /(^|\s+)(\S)(\S*)/g,
+        function (match, whitespace, firstLetter, rest) {
+          return whitespace + firstLetter.toUpperCase() + rest.toLowerCase();
+        }
+      )
+    );
+  };
+
+  console.log(textInput);
+
   return (
     <div>
       <Header />
@@ -98,6 +113,23 @@ const Register = () => {
                   onFinish={onFinish}
                   autoComplete="off"
                 >
+                  <Form.Item
+                    className={cx("largeForm")}
+                    name="fullname"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập họ và tên!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Họ và tên"
+                      prefix={<AiOutlineUser />}
+                      value={textInput}
+                      onChange={handleChangeText}
+                    />
+                  </Form.Item>
                   <Form.Item
                     className={cx("largeForm")}
                     name="username"

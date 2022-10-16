@@ -111,6 +111,18 @@ img {
   max-width: 100%;
 }
 
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
 @media (min-width: 768px) {
   .container {
     width: 750px;
@@ -174,4 +186,8 @@ body .slick-prev {
     -ms-transform: scale(1) translateY(-50%);
     transform: scale(1) translateY(-50%);
   }
+}
+
+body .ant-form-item-explain-error {
+  font-size: 1.2rem;
 }

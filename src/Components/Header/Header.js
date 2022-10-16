@@ -16,6 +16,7 @@ import {
   LogoutOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
+import { BsFillCartCheckFill } from "react-icons/bs";
 import { Avatar, Badge, Button, Dropdown, Menu } from "antd";
 import styles from "./Header.module.scss";
 import { useScrollPosition } from "../../Hooks/useScrollPosition";
@@ -115,6 +116,18 @@ const Header = ({ showCart, setShowCart }) => {
                     style={{ padding: "0 50px", width: "100%" }}
                   >
                     Đăng xuất
+                  </Button>
+                ),
+              },
+              {
+                key: "4",
+                label: (
+                  <Button
+                    icon={<BsFillCartCheckFill />}
+                    onClick={() => navigate("/orders")}
+                    style={{ padding: "0 50px", width: "100%" }}
+                  >
+                    Đơn hàng của bạn
                   </Button>
                 ),
               },
@@ -256,11 +269,8 @@ const Header = ({ showCart, setShowCart }) => {
                           </div>
                         ) : (
                           <>
-                            {cart.map((item) => (
-                              <div
-                                className={cx("miniCartItem")}
-                                key={item._id}
-                              >
+                            {cart.map((item, index) => (
+                              <div className={cx("miniCartItem")} key={index}>
                                 <div className={cx("miniCartLeft")}>
                                   <Link
                                     to={`/products/${item._id}`}
@@ -277,7 +287,9 @@ const Header = ({ showCart, setShowCart }) => {
                                     >
                                       {item.title}
                                     </Link>
-                                    <span className={cx("mnc-variant")}></span>
+                                    <span className={cx("mnc-variant")}>
+                                      {item.size}
+                                    </span>
                                   </p>
                                   <div className={cx("miniCartQuantity")}>
                                     <div className={cx("quantitySelector")}>
@@ -413,7 +425,7 @@ const Header = ({ showCart, setShowCart }) => {
                   <a onClick={(e) => e.preventDefault()}>
                     <Avatar icon={<UserOutlined />} />
                     {selectorUser !== null ? (
-                      <p>{selectorUser?.username}</p>
+                      <p>{selectorUser?.fullname}</p>
                     ) : (
                       <p>Chưa đăng nhập?</p>
                     )}
