@@ -1,9 +1,9 @@
-import { Breadcrumb, Col, Image, Row, Skeleton } from "antd";
+import { Breadcrumb, Col, Empty, Image, Row, Skeleton } from "antd";
 import classNames from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import styles from "./Product.module.scss";
@@ -11,6 +11,7 @@ import Slider from "react-slick";
 import { getDetailProduct } from "../../redux/slice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../redux/slice/cartSlice";
+import { addViewedsProducts } from "../../redux/slice/viewedProducts";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
@@ -25,10 +26,13 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   const dispatch = useDispatch();
   const product = useSelector((state) => state.products.product);
   const loading = useSelector((state) => state.products.isLoading);
+  const viewedProducts = useSelector((state) => state.views.products);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getDetail = async () => {
       const res = await dispatch(getDetailProduct(id));
+      if (res.payload === undefined) navigate("/");
       const { category, size } = res.payload;
       setSize(size[0]);
       setCategory(category);
@@ -41,7 +45,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
       );
     };
     getDetail();
-  }, [dispatch, id]);
+  }, [dispatch, id, navigate]);
 
   const SlickArrowLeft = ({ currentSlide, slideCount, ...props }) => (
     <GrFormPrevious
@@ -107,10 +111,13 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
 
   const handleAddCart = (e) => {
     e.preventDefault();
-    console.log({ ...product, quantity, size });
     dispatch(addProduct({ ...product, quantity, size }));
     setClickedShowCart(true);
   };
+
+  useEffect(() => {
+    product._id !== undefined && dispatch(addViewedsProducts(product));
+  }, [dispatch, navigate, product]);
 
   return (
     <div>
@@ -438,44 +445,51 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                 </div>
                 <div className={cx("listprodContent")}>
                   <Slider {...settings}>
-                    <div className={cx("listProductView")}>
-                      <div className={cx("productLoop")}>
-                        <div
-                          className={cx("productInner")}
-                          style={{ height: "313px" }}
-                        >
-                          <div className={cx("productsImage")}>
-                            <div
-                              className={cx("productsListImage")}
-                              style={{ height: "220px" }}
-                            >
-                              <div className={cx("productImageInner")}>
-                                <Link to={"/products/asd"}>
-                                  <div className={cx("image")}>
-                                    <picture>
-                                      <img
-                                        src="https://product.hstatic.net/1000281824/product/c39b1fb4b6754c47962405b8fee6fa0c_49eab7d9ab424059ac2ea87b564fd4e8_master.jpg"
-                                        alt=""
-                                      />
-                                    </picture>
-                                  </div>
-                                </Link>
+                    {viewedProducts.map((item) => (
+                      <div className={cx("listProductView")} key={item._id}>
+                        <div className={cx("productLoop")}>
+                          <div
+                            className={cx("productInner")}
+                            style={{ height: "313px" }}
+                          >
+                            <div className={cx("productsImage")}>
+                              <div
+                                className={cx("productsListImage")}
+                                style={{ height: "220px" }}
+                              >
+                                <div className={cx("productImageInner")}>
+                                  <Link to={`/products/${item._id}`}>
+                                    <div className={cx("image")}>
+                                      <picture>
+                                        <img
+                                          src={item.image}
+                                          alt={item.title}
+                                        />
+                                      </picture>
+                                    </div>
+                                  </Link>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className={cx("productsDetail")}>
-                            <h3>
-                              <Link to={"/"}>
-                                Degrey Leather Basic Balo - LBB
-                              </Link>
-                            </h3>
-                            <p className={cx("productPrice")}>
-                              <span className={cx("price")}>390,000₫</span>
-                            </p>
+                            <div className={cx("productsDetail")}>
+                              <h3>
+                                <Link to={`/products/${item._id}`}>
+                                  {item.title}
+                                </Link>
+                              </h3>
+                              <p className={cx("productPrice")}>
+                                <span className={cx("price")}>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
+                                </span>
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </Slider>
                 </div>
               </div>

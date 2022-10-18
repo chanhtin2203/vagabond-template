@@ -50,6 +50,7 @@ const Cart = () => {
 
   const handleClickPayment = () => {
     if (payment === "COD") navigate("/checkouts");
+    else navigate("/checkoutPayment");
   };
 
   const handleClickLogin = () => {

@@ -1,11 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { BASE_URL } from "../../Utils/BaseUrl";
 
 export const createNewOrder = createAsyncThunk(
   "orders/createNewOrder",
-  async ({ data, accessToken, axiosJWT }) => {
-    const res = await axiosJWT.post(`${BASE_URL}/orders`, data, {
+  async ({ dataOrders, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.post(`${BASE_URL}/orders`, dataOrders, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const getAllOrders = createAsyncThunk(
+  "orders/getAllOrders",
+  async ({ id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.get(`${BASE_URL}/orders/find/${id}`, {
+      params: { id },
       headers: { token: `Beaer ${accessToken}` },
     });
     return res.data;
@@ -19,14 +29,25 @@ const orders = createSlice({
     isFetching: false,
   },
   extraReducers: {
+    // create new orders
     [createNewOrder.pending]: (state) => {
       state.isFetching = true;
     },
-    [createNewOrder.fulfilled]: (state, action) => {
+    [createNewOrder.fulfilled]: (state) => {
+      state.isFetching = false;
+    },
+    [createNewOrder.rejected]: (state) => {
+      state.isFetching = false;
+    },
+    // get all orders
+    [getAllOrders.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [getAllOrders.fulfilled]: (state, action) => {
       state.isFetching = false;
       state.orders = action.payload;
     },
-    [createNewOrder.rejected]: (state) => {
+    [getAllOrders.rejected]: (state) => {
       state.isFetching = false;
     },
   },

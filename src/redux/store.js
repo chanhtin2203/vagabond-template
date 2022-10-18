@@ -14,19 +14,21 @@ import productsReducer from "./slice/productsSlice";
 import cartReducer from "./slice/cartSlice";
 import userReducer from "./slice/userSlice";
 import ordersReducer from "./slice/orderSlice";
+import viewsProductReducer from "./slice/viewedProducts";
 
 // Store
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["carts", "users"],
+  whitelist: ["carts", "users", "views"],
 };
 const rootReducer = combineReducers({
   products: productsReducer,
   carts: cartReducer,
   users: userReducer,
   orders: ordersReducer,
+  views: viewsProductReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

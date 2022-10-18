@@ -77,6 +77,9 @@ const Header = ({ showCart, setShowCart }) => {
   };
 
   const handleLogout = () => {
+    if (location.pathname.includes("/orders")) {
+      navigate("/");
+    }
     let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
     dispatch(
       logoutUser({

@@ -4,25 +4,26 @@ import {
   Divider,
   Form,
   Input,
-  InputNumber,
-  Popconfirm,
+  message,
   Result,
 } from "antd";
 import classNames from "classnames/bind";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createAxios } from "../../Utils/createInstance";
 import { loginSuccess } from "../../redux/slice/userSlice";
 import { deleteAllCart } from "../../redux/slice/cartSlice";
 import { createNewOrder } from "../../redux/slice/orderSlice";
 import styles from "./Checkout.module.scss";
+import { BASE_URL } from "../../Utils/BaseUrl";
 
 const cx = classNames.bind(styles);
 const Checkout = () => {
   const [result, setResult] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.login);
   const cart = useSelector((state) => state.carts.products);
@@ -30,7 +31,7 @@ const Checkout = () => {
 
   const onFinish = async (values) => {
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
-    const data = {
+    const dataOrders = {
       ...values,
       userId: user._id,
       products: cart.map((item) => ({
@@ -40,12 +41,29 @@ const Checkout = () => {
       })),
       amount: total,
     };
-    const res = await dispatch(
-      createNewOrder({ data, accessToken: user?.accessToken, axiosJWT })
-    );
-    if (res.payload !== undefined) {
-      setResult(true);
-      dispatch(deleteAllCart());
+    if (location.pathname.includes("/checkoutPayment")) {
+      const { data } = await axiosJWT.post(
+        `${BASE_URL}/payment/create`,
+        dataOrders,
+        {
+          headers: { token: `Beaer ${user?.accessToken}` },
+        }
+      );
+
+      if (data.code === "00") {
+        document.location = data.data;
+      }
+    } else {
+      const res = await dispatch(
+        createNewOrder({ dataOrders, accessToken: user?.accessToken, axiosJWT })
+      );
+      if (res.payload !== undefined) {
+        setResult(true);
+        dispatch(deleteAllCart());
+      } else {
+        setResult(false);
+        message.error("Đã xảy ra lỗi khi mua hàng", 1500);
+      }
     }
   };
 
@@ -348,7 +366,9 @@ const Checkout = () => {
                                 htmlType="submit"
                                 size="large"
                               >
-                                Hoàn thành thanh toán
+                                {location.pathname.includes("/checkoutPayment")
+                                  ? "Tiến hành thanh toán thẻ tín dụng"
+                                  : "Hoàn thành thanh toán"}
                               </Button>
                             </div>
                           </Form.Item>

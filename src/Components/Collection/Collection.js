@@ -55,7 +55,7 @@ const Collection = ({ title, nameBtn, items = [], href }) => {
                       </div>
                       <div className={cx("productsDetail")}>
                         <h3>
-                          <Link to={item._id}>{item.title}</Link>
+                          <Link to={`/products/${item._id}`}>{item.title}</Link>
                         </h3>
                         <p className={cx("productPrice")}>
                           <span className={cx("price")}>

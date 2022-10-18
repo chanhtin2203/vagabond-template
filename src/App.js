@@ -10,6 +10,7 @@ import ScrollToTop from "./Hooks/useScrollToTop";
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
 import ResultSearch from "./Pages/ResultSearch/ResultSearch";
 import Orders from "./Pages/Orders/Orders";
+import OrderSuccess from "./Pages/OrderSuccess/OrderSuccess";
 function App() {
   return (
     <div className="App">
@@ -22,7 +23,9 @@ function App() {
         <Route path="/products" element={<ResultSearch />} />
         <Route path="/login" element={<Login />} />
         <Route path="/checkouts" element={<Checkout />} />
+        <Route path="/checkoutPayment" element={<Checkout />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/orderSuccess" element={<OrderSuccess />} />
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
