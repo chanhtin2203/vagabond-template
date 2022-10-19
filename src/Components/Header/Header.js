@@ -111,6 +111,32 @@ const Header = ({ showCart, setShowCart }) => {
         selectorUser !== null
           ? [
               {
+                key: "5",
+                label: (
+                  <Button
+                    icon={<UserOutlined />}
+                    onClick={() => navigate("/users")}
+                    style={{ padding: "0 50px", width: "100%" }}
+                  >
+                    Thông tin khách hàng
+                  </Button>
+                ),
+              },
+              {
+                key: "4",
+                label: (
+                  <Button
+                    icon={
+                      <BsFillCartCheckFill style={{ marginRight: "10px" }} />
+                    }
+                    onClick={() => navigate("/orders")}
+                    style={{ padding: "0 50px", width: "100%" }}
+                  >
+                    Đơn hàng của bạn
+                  </Button>
+                ),
+              },
+              {
                 key: "3",
                 label: (
                   <Button
@@ -119,18 +145,6 @@ const Header = ({ showCart, setShowCart }) => {
                     style={{ padding: "0 50px", width: "100%" }}
                   >
                     Đăng xuất
-                  </Button>
-                ),
-              },
-              {
-                key: "4",
-                label: (
-                  <Button
-                    icon={<BsFillCartCheckFill />}
-                    onClick={() => navigate("/orders")}
-                    style={{ padding: "0 50px", width: "100%" }}
-                  >
-                    Đơn hàng của bạn
                   </Button>
                 ),
               },

@@ -3,9 +3,10 @@ import { BASE_URL } from "../../Utils/BaseUrl";
 
 export const createNewOrder = createAsyncThunk(
   "orders/createNewOrder",
-  async ({ dataOrders, accessToken, axiosJWT }) => {
-    const res = await axiosJWT.post(`${BASE_URL}/orders`, dataOrders, {
+  async ({ id, dataOrders, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.post(`${BASE_URL}/orders/`, dataOrders, {
       headers: { token: `Beaer ${accessToken}` },
+      param: { id: id },
     });
     return res.data;
   }
@@ -15,7 +16,6 @@ export const getAllOrders = createAsyncThunk(
   "orders/getAllOrders",
   async ({ id, accessToken, axiosJWT }) => {
     const res = await axiosJWT.get(`${BASE_URL}/orders/find/${id}`, {
-      params: { id },
       headers: { token: `Beaer ${accessToken}` },
     });
     return res.data;

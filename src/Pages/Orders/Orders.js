@@ -37,7 +37,7 @@ const Orders = () => {
   useEffect(() => {
     if (user === null) navigate("/");
     dispatch(getAllProducts());
-  }, []);
+  }, [dispatch, navigate, user]);
 
   const showDrawer = (record) => {
     products?.map((item) => item._id === record && setdetailProduct(item));
@@ -68,7 +68,7 @@ const Orders = () => {
       dataIndex: "phone",
       key: "phone",
       width: 250,
-      render: (record) => <div>0{record}</div>,
+      render: (record) => <div>{record}</div>,
     },
     {
       title: "Tổng tiền",
@@ -97,6 +97,12 @@ const Orders = () => {
       width: 300,
     },
     {
+      title: "Ngày",
+      dataIndex: "payDate",
+      key: "payDate",
+      width: 300,
+    },
+    {
       title: "Thanh toán",
       key: "payment",
       dataIndex: "payment",
@@ -119,10 +125,17 @@ const Orders = () => {
       width: 250,
       fixed: "right",
       render: (record) => {
-        let color = record === "pending" ? "red" : "green";
+        let color =
+          record === "pending"
+            ? "orange"
+            : record === "cancel"
+            ? "magenta"
+            : "green";
         let text =
           record === "pending"
             ? "Đang chờ giao hàng"
+            : record === "cancel"
+            ? "Hủy đơn hàng"
             : "Đã giao hàng thành công";
         return (
           <Tag color={color} key={record}>

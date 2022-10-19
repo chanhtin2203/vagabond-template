@@ -48,13 +48,21 @@ const Cart = () => {
     setPayment(e.target.value);
   };
 
-  const handleClickPayment = () => {
-    if (payment === "COD") navigate("/checkouts");
-    else navigate("/checkoutPayment");
+  const handleClickPayment = (values) => {
+    if (values) {
+      navigate("/cart");
+    } else {
+      if (payment === "COD") navigate("/checkouts");
+      else navigate("/checkoutPayment");
+    }
   };
 
-  const handleClickLogin = () => {
-    navigate("/login");
+  const handleClickLogin = (values) => {
+    if (values) {
+      navigate("/cart");
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -71,7 +79,9 @@ const Cart = () => {
                   </Breadcrumb.Item>
                   <Breadcrumb.Item>
                     <span>
-                      <strong style={{ fontWeight: 400 }}>Giỏ hàng (0)</strong>
+                      <strong style={{ fontWeight: 400 }}>
+                        Giỏ hàng ({quantity})
+                      </strong>
                     </span>
                   </Breadcrumb.Item>
                 </Breadcrumb>
@@ -257,7 +267,11 @@ const Cart = () => {
                                   "btnRed",
                                   cart.length === 0 && "disabled"
                                 )}
-                                onClick={handleClickPayment}
+                                onClick={() =>
+                                  handleClickPayment(
+                                    cart.length === 0 && "disabled"
+                                  )
+                                }
                               >
                                 THANH TOÁN
                               </a>
@@ -270,7 +284,11 @@ const Cart = () => {
                                   "btnRed",
                                   cart.length === 0 && "disabled"
                                 )}
-                                onClick={handleClickLogin}
+                                onClick={() =>
+                                  handleClickLogin(
+                                    cart.length === 0 && "disabled"
+                                  )
+                                }
                               >
                                 Đăng nhập để thanh toán
                               </a>

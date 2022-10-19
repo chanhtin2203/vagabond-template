@@ -11,7 +11,12 @@ import ErrorPage from "./Pages/ErrorPage/ErrorPage";
 import ResultSearch from "./Pages/ResultSearch/ResultSearch";
 import Orders from "./Pages/Orders/Orders";
 import OrderSuccess from "./Pages/OrderSuccess/OrderSuccess";
+import Users from "./Pages/Users/Users";
+import AdminHome from "./Pages/Admin/AdminHome/AdminHome";
+import AdminLogin from "./Pages/Admin/AdminLogin/AdminLogin";
+import { useSelector } from "react-redux";
 function App() {
+  const user = useSelector((state) => state.users.login);
   return (
     <div className="App">
       <ScrollToTop />
@@ -25,9 +30,16 @@ function App() {
         <Route path="/checkouts" element={<Checkout />} />
         <Route path="/checkoutPayment" element={<Checkout />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/orderSuccess" element={<OrderSuccess />} />
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<ErrorPage />} />
+        {user?.admin && (
+          <>
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/home" element={<AdminHome />} />
+          </>
+        )}
       </Routes>
     </div>
   );

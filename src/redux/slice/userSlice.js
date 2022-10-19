@@ -17,6 +17,36 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const getUser = createAsyncThunk(
+  "user/getUser",
+  async ({ id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.get(`${BASE_URL}/user/find/${id}`, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const editUser = createAsyncThunk(
+  "user/editUser",
+  async ({ values, id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.put(`${BASE_URL}/user/edit/${id}`, values, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const changePasswordUser = createAsyncThunk(
+  "user/changePasswordUser",
+  async ({ values, id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.put(`${BASE_URL}/user/password/${id}`, values, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
 const user = createSlice({
   name: "user",
   initialState: {
@@ -50,6 +80,28 @@ const user = createSlice({
       state.login = null;
     },
     [logoutUser.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // get user
+    [getUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getUser.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.login = { ...state.login, ...action.payload };
+    },
+    [getUser.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // edit user
+    [editUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [editUser.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.login = { ...state.login, ...action.payload };
+    },
+    [editUser.rejected]: (state) => {
       state.isLoading = false;
     },
   },

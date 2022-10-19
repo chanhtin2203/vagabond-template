@@ -8,7 +8,7 @@ import {
   Result,
 } from "antd";
 import classNames from "classnames/bind";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createAxios } from "../../Utils/createInstance";
@@ -55,17 +55,25 @@ const Checkout = () => {
       }
     } else {
       const res = await dispatch(
-        createNewOrder({ dataOrders, accessToken: user?.accessToken, axiosJWT })
+        createNewOrder({
+          id: user._id,
+          dataOrders,
+          accessToken: user?.accessToken,
+          axiosJWT,
+        })
       );
       if (res.payload !== undefined) {
         setResult(true);
         dispatch(deleteAllCart());
       } else {
         setResult(false);
-        message.error("Đã xảy ra lỗi khi mua hàng", 1500);
+        message.error("Đã xảy ra lỗi khi mua hàng", 1.5);
       }
     }
   };
+  useEffect(() => {
+    cart.length === 0 && navigate("/");
+  }, []);
 
   return (
     <>

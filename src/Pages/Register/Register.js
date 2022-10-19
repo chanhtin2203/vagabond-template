@@ -90,8 +90,6 @@ const Register = () => {
     );
   };
 
-  console.log(textInput);
-
   return (
     <div>
       <Header />

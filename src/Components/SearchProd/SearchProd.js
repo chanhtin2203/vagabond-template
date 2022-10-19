@@ -19,6 +19,7 @@ const SearchProd = ({ setModalSearch }) => {
     subCategory: value.subCategory,
   }));
 
+
   function getUniqueListBy(arr, key) {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
   }
@@ -94,21 +95,25 @@ const SearchProd = ({ setModalSearch }) => {
                 <p className={cx("dataEmpty")}>Không có sản phẩm nào...</p>
               )}
             </div>
-            <div className={cx("searchSuggest", "showSuggest")}>
-              <p>Gợi ý cho bạn:</p>
-              <ul>
-                {category.map((cat, index) => (
-                  <li key={index}>
-                    <Link
-                      to={`/collections/${cat.category}`}
-                      onClick={() => setModalSearch(false)}
-                    >
-                      {cat.subCategory}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {debounceValue === "" ? (
+              <div className={cx("searchSuggest", "showSuggest")}>
+                <p>Gợi ý cho bạn:</p>
+                <ul>
+                  {category.map((cat, index) => (
+                    <li key={index}>
+                      <Link
+                        to={`/collections/${cat.category}`}
+                        onClick={() => setModalSearch(false)}
+                      >
+                        {cat.subCategory}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

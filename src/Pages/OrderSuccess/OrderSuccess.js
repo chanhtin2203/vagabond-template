@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined, FrownOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./OrderSuccess.module.scss";
 import { deleteAllCart } from "../../redux/slice/cartSlice";
@@ -45,7 +45,7 @@ export default function OrderSuccess() {
         <section id={cx("order-error")}>
           <div className={cx("order-error")}>
             <span>
-              <CheckOutlined />
+              <FrownOutlined />
             </span>
             <p>Đặt hàng không thành công</p>
             {/* <Link to="">OK</Link> */}
