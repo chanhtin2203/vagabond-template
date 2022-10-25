@@ -12,6 +12,7 @@ import { getDetailProduct } from "../../redux/slice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../redux/slice/cartSlice";
 import { addViewedsProducts } from "../../redux/slice/viewedProducts";
+import Collection from "../../Components/Collection/Collection";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
@@ -167,7 +168,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                             <form>
                               <div className={cx("select")}></div>
                               <div className={cx("select-swatch")}>
-                                {product.size?.length > 0 && (
+                                {product.size?.length > 0 && product.inStock && (
                                   <div className={cx("swatch")}>
                                     <div className={cx("titleSwap")}>
                                       SIZE:{" "}
@@ -225,12 +226,21 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                                   />
                                 </div>
                                 <div className={cx("addCartArea")}>
-                                  <button
-                                    onClick={handleAddCart}
-                                    className={cx("button", "btnAddToCart")}
-                                  >
-                                    <span>Thêm vào giỏ</span>
-                                  </button>
+                                  {product.inStock ? (
+                                    <button
+                                      onClick={handleAddCart}
+                                      className={cx("button", "btnAddToCart")}
+                                    >
+                                      <span>Thêm vào giỏ</span>
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => e.preventDefault()}
+                                      className={cx("button", "btnAddToCart")}
+                                    >
+                                      <span>Tạm hết hàng</span>
+                                    </button>
+                                  )}
                                 </div>
                               </div>
                             </form>
@@ -445,7 +455,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                 </div>
                 <div className={cx("listprodContent")}>
                   <Slider {...settings}>
-                    {viewedProducts.map((item) => (
+                    {viewedProducts.map((item, index) => (
                       <div className={cx("listProductView")} key={item._id}>
                         <div className={cx("productLoop")}>
                           <div

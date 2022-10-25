@@ -12,11 +12,15 @@ import ResultSearch from "./Pages/ResultSearch/ResultSearch";
 import Orders from "./Pages/Orders/Orders";
 import OrderSuccess from "./Pages/OrderSuccess/OrderSuccess";
 import Users from "./Pages/Users/Users";
-import AdminHome from "./Pages/Admin/AdminHome/AdminHome";
-import AdminLogin from "./Pages/Admin/AdminLogin/AdminLogin";
+import AdminHome from "./Pages/Admin/AdminDashboard/AdminDashboard";
 import { useSelector } from "react-redux";
+import HeaderAdmin from "./Pages/Admin/Components/HeaderAdmin/HeaderAdmin";
+import AdminDashboard from "./Pages/Admin/AdminDashboard/AdminDashboard";
+import AdminUser from "./Pages/Admin/AdminUser/AdminUser";
+import AdminProducts from "./Pages/Admin/AdminProducts/AdminProducts";
 function App() {
   const user = useSelector((state) => state.users.login);
+
   return (
     <div className="App">
       <ScrollToTop />
@@ -34,10 +38,16 @@ function App() {
         <Route path="/orderSuccess" element={<OrderSuccess />} />
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<ErrorPage />} />
+
         {user?.admin && (
           <>
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/home" element={<AdminHome />} />
+            <Route path="/admin" element={<HeaderAdmin />}>
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUser />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="orders" element />
+              <Route path="payment" element />
+            </Route>
           </>
         )}
       </Routes>

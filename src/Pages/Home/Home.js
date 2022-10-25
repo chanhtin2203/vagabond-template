@@ -63,8 +63,8 @@ const Home = () => {
             <Carousel>
               <Link to={"/collections/all-products"}>
                 <img
-                  src="https://file.hstatic.net/1000281824/file/z3605342700333_e0573e4fd541ce01b187bfed5792184e_d6f9b4c3708148738c2199dd25fcaf6f.jpg"
-                  alt=""
+                  src="https://file.hstatic.net/1000281824/file/2_77f94c36ebc94358af7d7d63a39e1d17.jpg"
+                  alt="banner"
                 />
               </Link>
             </Carousel>

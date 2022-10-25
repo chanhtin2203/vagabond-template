@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { searchProduct } from "../../redux/slice/productsSlice";
 import useDebounce from "../../Hooks/useDebounce";
+import { getAllProducts } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +19,6 @@ const SearchProd = ({ setModalSearch }) => {
     category: value.category,
     subCategory: value.subCategory,
   }));
-
 
   function getUniqueListBy(arr, key) {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
@@ -38,6 +38,10 @@ const SearchProd = ({ setModalSearch }) => {
     };
     fetchingSearch();
   }, [debounceValue, dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, []);
 
   return (
     <div className={cx("headerWrapSearch")}>

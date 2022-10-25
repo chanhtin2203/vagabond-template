@@ -1,0 +1,85 @@
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logoAdmin {
+  height: 100%;
+  height: 64px;
+  width: 100%;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.logo-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  & img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    position: relative;
+  }
+}
+
+.logo-link h1 {
+  position: absolute;
+  color: #000;
+  font-size: 20px;
+  padding-left: 12px;
+  margin: 0;
+  vertical-align: middle;
+  animation: fade-in;
+  animation-duration: 0.3s;
+  // right: 122px;
+  left: 35px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.ant-layout-content {
+  background-color: #f0f2f5 !important;
+}
+
+.translate {
+  padding: 10px;
+}
+
+.div {
+  padding: 10px;
+  width: 100%;
+}
+.div:hover {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.ant-dropdown-menu {
+  min-width: 160px;
+  left: 20px;
+  top: 0px;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

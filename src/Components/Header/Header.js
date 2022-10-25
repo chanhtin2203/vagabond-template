@@ -16,8 +16,10 @@ import {
   LogoutOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
+import { FaRegUserCircle } from "react-icons/fa";
 import { BsFillCartCheckFill } from "react-icons/bs";
-import { Avatar, Badge, Button, Dropdown, Menu } from "antd";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { Badge, Button, Dropdown, Menu } from "antd";
 import styles from "./Header.module.scss";
 import { useScrollPosition } from "../../Hooks/useScrollPosition";
 import SearchProd from "../SearchProd/SearchProd";
@@ -27,10 +29,20 @@ import {
   deleteProduct,
   increaseProduct,
 } from "../../redux/slice/cartSlice";
-import { logoutUser, loginSuccess } from "../../redux/slice/userSlice";
+import { logoutUser, loginSuccess, getUser } from "../../redux/slice/userSlice";
 import { createAxios } from "../../Utils/createInstance";
 
 const cx = classNames.bind(styles);
+
+function getItem(label, key, icon, children, type) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
+}
 
 const Header = ({ showCart, setShowCart }) => {
   const position = useScrollPosition();
@@ -43,9 +55,22 @@ const Header = ({ showCart, setShowCart }) => {
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
   const selectorUser = useSelector((state) => state.users.login);
+  let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
 
   useEffect(() => {
     document.title = "VAGABOND - VAGABOND VIETNAM";
+    (async () => {
+      const res = await dispatch(
+        getUser({
+          id: selectorUser?._id,
+          accessToken: selectorUser?.accessToken,
+          axiosJWT,
+        })
+      );
+      if (res.type.includes("rejected")) {
+        await dispatch(loginSuccess(null));
+      }
+    })();
   }, []);
 
   const checkLoginAndRegister =
@@ -80,7 +105,7 @@ const Header = ({ showCart, setShowCart }) => {
     if (location.pathname.includes("/orders")) {
       navigate("/");
     }
-    let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
+
     dispatch(
       logoutUser({
         accessToken: selectorUser?.accessToken,
@@ -110,70 +135,73 @@ const Header = ({ showCart, setShowCart }) => {
       items={
         selectorUser !== null
           ? [
-              {
-                key: "5",
-                label: (
-                  <Button
-                    icon={<UserOutlined />}
-                    onClick={() => navigate("/users")}
-                    style={{ padding: "0 50px", width: "100%" }}
-                  >
-                    Thông tin khách hàng
-                  </Button>
-                ),
-              },
-              {
-                key: "4",
-                label: (
+              getItem(
+                <Button
+                  icon={<UserOutlined />}
+                  onClick={() => navigate("/users")}
+                  style={{ padding: "0 50px", width: "100%" }}
+                >
+                  Thông tin khách hàng
+                </Button>,
+                "5"
+              ),
+              getItem(
+                <Button
+                  icon={<BsFillCartCheckFill style={{ marginRight: "10px" }} />}
+                  onClick={() => navigate("/orders")}
+                  style={{ padding: "0 50px", width: "100%" }}
+                >
+                  Đơn hàng của bạn
+                </Button>,
+                "4"
+              ),
+              selectorUser?.admin &&
+                getItem(
                   <Button
                     icon={
-                      <BsFillCartCheckFill style={{ marginRight: "10px" }} />
+                      <MdOutlineAdminPanelSettings
+                        style={{ marginRight: "10px" }}
+                      />
                     }
-                    onClick={() => navigate("/orders")}
+                    onClick={() => navigate("/admin/dashboard")}
                     style={{ padding: "0 50px", width: "100%" }}
                   >
-                    Đơn hàng của bạn
-                  </Button>
+                    Quản lý admin
+                  </Button>,
+                  "admin"
                 ),
-              },
-              {
-                key: "3",
-                label: (
-                  <Button
-                    icon={<LogoutOutlined />}
-                    onClick={handleLogout}
-                    style={{ padding: "0 50px", width: "100%" }}
-                  >
-                    Đăng xuất
-                  </Button>
-                ),
-              },
+              getItem(
+                <Button
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}
+                  style={{ padding: "0 50px", width: "100%" }}
+                >
+                  Đăng xuất
+                </Button>,
+                "3"
+              ),
             ]
           : [
-              {
-                key: "1",
-                label: (
-                  <Button
-                    onClick={() => navigate("/login")}
-                    style={{ padding: "0 50px", width: "100%" }}
-                    icon={<LoginOutlined />}
-                  >
-                    Đăng nhập
-                  </Button>
-                ),
-              },
-              {
-                key: "2",
-                label: (
-                  <Button
-                    icon={<UserAddOutlined />}
-                    onClick={() => navigate("/register")}
-                    style={{ padding: "0 50px", width: "100%" }}
-                  >
-                    Đăng ký
-                  </Button>
-                ),
-              },
+              getItem(
+                <Button
+                  onClick={() => navigate("/login")}
+                  style={{ padding: "0 50px", width: "100%" }}
+                  icon={<LoginOutlined />}
+                >
+                  Đăng nhập
+                </Button>,
+                "1"
+              ),
+              getItem(
+                <Button
+                  icon={<UserAddOutlined />}
+                  onClick={() => navigate("/register")}
+                  style={{ padding: "0 50px", width: "100%" }}
+                >
+                  Đăng ký
+                </Button>,
+                "2"
+              ),
             ]
       }
     />
@@ -437,10 +465,10 @@ const Header = ({ showCart, setShowCart }) => {
                   overlay={menu}
                   arrow
                   placement="bottom"
-                  trigger={["click"]}
+                  // trigger={["click"]}
                 >
                   <a onClick={(e) => e.preventDefault()}>
-                    <Avatar icon={<UserOutlined />} />
+                    <FaRegUserCircle style={{ fontSize: "2.5rem" }} />
                     {selectorUser !== null ? (
                       <p>{selectorUser?.fullname}</p>
                     ) : (

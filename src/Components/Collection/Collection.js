@@ -11,6 +11,7 @@ const cx = classNames.bind(styles);
 const Collection = ({ title, nameBtn, items = [], href }) => {
   const loading = useSelector((state) => state.products.isLoading);
   const [limit, setLimit] = useState(30);
+  console.log(items);
 
   return (
     <Spin spinning={loading}>
@@ -35,9 +36,14 @@ const Collection = ({ title, nameBtn, items = [], href }) => {
                   >
                     <div
                       className={cx("productInner")}
-                      style={{ height: "313px" }}
+                      style={{ height: "312px" }}
                     >
                       <div className={cx("productsImage")}>
+                        {item.inStock === false && (
+                          <div className={cx("productsSoldout")}>
+                            <span>Tạm hết hàng</span>
+                          </div>
+                        )}
                         <div
                           className={cx("productsListImage")}
                           style={{ height: "220px" }}

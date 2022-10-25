@@ -10,6 +10,18 @@ export const getAllProducts = createAsyncThunk(
   }
 );
 
+export const getProductByPagination = createAsyncThunk(
+  "products/productsFetching",
+  async ({ current, pageSize, search }) => {
+    const res = await axios.get(
+      current && pageSize
+        ? `${BASE_URL}/products?pageIndex=${current}&pageSize=${pageSize}&search=${search}`
+        : `${BASE_URL}/products`
+    );
+    return res.data;
+  }
+);
+
 export const getAllProductsRandom = createAsyncThunk(
   "products/productsRandomFetching",
   async () => {

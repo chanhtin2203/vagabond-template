@@ -1,7 +1,6 @@
-import { Button, Col, Input, Row, Form, message, InputNumber } from "antd";
+import { Button, Col, Input, Row, Form, message } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { editUser, loginSuccess } from "../../redux/slice/userSlice";
 import { createAxios } from "../../Utils/createInstance";
 
@@ -33,8 +32,8 @@ const ChangeInfoUser = () => {
       })
     );
     if (res.payload !== undefined) {
-      window.location.reload();
       message.success("Thay đổi thông tin thành công");
+      window.location.reload();
     }
   };
 

@@ -536,8 +536,11 @@
 
   p {
     font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 0.5em;
   }
 }
+
 @media (min-width: 992px) {
   .siteNavBoxScroll {
     overflow-y: scroll;

@@ -54,6 +54,24 @@
   overflow: hidden;
 }
 
+.productsSoldout {
+  position: absolute;
+  top: 5px;
+  z-index: 3;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 5px;
+}
+
+.productsSoldout {
+  left: 5px;
+  background: #565656;
+  font-size: 11px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
 .productsListImage {
   position: relative;
   overflow: hidden;

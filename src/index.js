@@ -12,6 +12,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 AOS.init({ duration: 800 });
 root.render(

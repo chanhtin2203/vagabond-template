@@ -18,7 +18,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../Utils/createInstance";
-import { getAllOrders } from "../../redux/slice/orderSlice";
+import { getAllOrdersUser } from "../../redux/slice/orderSlice";
 import { loginSuccess } from "../../redux/slice/userSlice";
 import { MinusCircleTwoTone, PlusCircleTwoTone } from "@ant-design/icons";
 import { getAllProducts } from "../../redux/slice/productsSlice";
@@ -150,7 +150,7 @@ const Orders = () => {
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
     (async () => {
       await dispatch(
-        getAllOrders({
+        getAllOrdersUser({
           id: user?._id,
           accessToken: user?.accessToken,
           axiosJWT,
