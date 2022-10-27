@@ -13,6 +13,7 @@ import {
   Popconfirm,
   Row,
   Space,
+  Switch,
   Table,
   Tag,
 } from "antd";
@@ -24,20 +25,20 @@ import { FaRegUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../../Utils/createInstance";
 import {
-  loginSuccess,
   getAllUser,
   getDetailUser,
   updateUserByAdmin,
   deleteUserByAdmin,
   searchUser,
 } from "../../../redux/slice/userSlice";
+import { loginSuccess } from "../../../redux/slice/authSlice";
 import { getAllOrders } from "../../../redux/slice/orderSlice";
 
 const AdminUser = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
   const allUsers = useSelector((state) => state.users.users);
   const allOrders = useSelector((state) => state.orders.allOrders);
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
@@ -46,6 +47,7 @@ const AdminUser = () => {
     const res = await dispatch(
       getDetailUser({ id, accessToken: user.accessToken, axiosJWT })
     );
+
     form.setFieldsValue({ ...res.payload });
     setIsModalOpen(true);
   };
@@ -104,6 +106,23 @@ const AdminUser = () => {
     })();
   }, []);
 
+  const onChange = async (items, checked) => {
+    const { password, ...others } = items;
+    const res = await dispatch(
+      updateUserByAdmin({
+        id: others._id,
+        values: { ...others, admin: checked },
+        accessToken: user.accessToken,
+        axiosJWT,
+      })
+    );
+    if (res.type.includes("fulfilled")) {
+      message.success("Sửa thành công");
+    } else {
+      message.success("Sửa không thành công");
+    }
+  };
+
   const columns = [
     {
       title: "Tên đầy đủ",
@@ -142,18 +161,28 @@ const AdminUser = () => {
       title: "Cấp độ",
       key: "admin",
       dataIndex: "admin",
-      render: (record) => (
-        <Space size="middle">
+      render: (record, items) => (
+        <div style={{ width: "100%" }}>
           {record ? (
             <a>
               <MdOutlineAdminPanelSettings /> Quản trị viên
+              <Switch
+                checked={record}
+                style={{ float: "right" }}
+                onClick={(checked) => onChange(items, checked)}
+              />
             </a>
           ) : (
             <a>
               <FaRegUser /> Người dùng
+              <Switch
+                checked={record}
+                style={{ float: "right" }}
+                onClick={(checked) => onChange(items, checked)}
+              />
             </a>
           )}
-        </Space>
+        </div>
       ),
     },
     {
@@ -180,25 +209,14 @@ const AdminUser = () => {
   const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
 
   const onSearch = async (value) => {
-    if (value !== "") {
-      await dispatch(
-        searchUser({
-          search: value.toLowerCase(),
-          axiosJWT,
-          accessToken: user.accessToken,
-        })
-      );
-    } else {
-      await dispatch(
-        getAllUser({
-          axiosJWT,
-          accessToken: user?.accessToken,
-        })
-      );
-    }
+    await dispatch(
+      searchUser({
+        search: value.toLowerCase(),
+        axiosJWT,
+        accessToken: user.accessToken,
+      })
+    );
   };
-
-  console.log(allUsers);
 
   return (
     <div>
@@ -233,6 +251,7 @@ const AdminUser = () => {
         <Table columns={columns} dataSource={allUsers} rowKey="_id" />
       </div>
       <Modal
+        forceRender
         title="Thêm người dùng"
         open={isModalOpen}
         onCancel={handleCancel}

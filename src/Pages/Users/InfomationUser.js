@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const cx = classNames.bind(styles);
 const InfomationUser = () => {
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.users.user);
 
   return (
     <Row gutter={30}>

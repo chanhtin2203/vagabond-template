@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../Utils/createInstance";
 import { getAllOrdersUser } from "../../redux/slice/orderSlice";
-import { loginSuccess } from "../../redux/slice/userSlice";
+import { loginSuccess } from "../../redux/slice/authSlice";
 import { MinusCircleTwoTone, PlusCircleTwoTone } from "@ant-design/icons";
 import { getAllProducts } from "../../redux/slice/productsSlice";
 
@@ -28,7 +28,7 @@ const Orders = () => {
   const [open, setOpen] = useState(false);
   const [detailProduct, setdetailProduct] = useState({});
   const orders = useSelector((state) => state.orders.orders);
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
   const products = useSelector((state) => state.products.products);
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const Orders = () => {
   }, [dispatch, navigate, user]);
 
   const showDrawer = (record) => {
-    products?.map((item) => item._id === record && setdetailProduct(item));
+    products?.filter((item) => item._id === record && setdetailProduct(item));
     setOpen(true);
   };
   const onClose = () => {

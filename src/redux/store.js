@@ -15,13 +15,14 @@ import cartReducer from "./slice/cartSlice";
 import userReducer from "./slice/userSlice";
 import ordersReducer from "./slice/orderSlice";
 import viewsProductReducer from "./slice/viewedProducts";
+import authReducer from "./slice/authSlice";
 
 // Store
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["carts", "users", "views"],
+  whitelist: ["carts", "auth", "views"],
 };
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   users: userReducer,
   orders: ordersReducer,
   views: viewsProductReducer,
+  auth: authReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

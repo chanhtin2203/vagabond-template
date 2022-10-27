@@ -116,7 +116,7 @@ const Footer = () => {
                         <PhoneOutlined className={cx("iconHotLine")} />
                       </div>
                       <div className={cx("boxContent")}>
-                        <span>0123456789</span>
+                        <span>0924963557</span>
                         <u>vagabond.vn@gmail.com</u>
                       </div>
                     </div>

@@ -29,7 +29,8 @@ import {
   deleteProduct,
   increaseProduct,
 } from "../../redux/slice/cartSlice";
-import { logoutUser, loginSuccess, getUser } from "../../redux/slice/userSlice";
+import { getUser } from "../../redux/slice/userSlice";
+import { logoutUser, loginSuccess } from "../../redux/slice/authSlice";
 import { createAxios } from "../../Utils/createInstance";
 
 const cx = classNames.bind(styles);
@@ -54,7 +55,7 @@ const Header = ({ showCart, setShowCart }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
-  const selectorUser = useSelector((state) => state.users.login);
+  const selectorUser = useSelector((state) => state.auth.login);
   let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
 
   useEffect(() => {

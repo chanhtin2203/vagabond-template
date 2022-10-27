@@ -10,7 +10,7 @@ import { FaRegSadCry } from "react-icons/fa";
 import { BiWinkSmile } from "react-icons/bi";
 import { Form, Input, notification } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/slice/userSlice";
+import { loginUser } from "../../redux/slice/authSlice";
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +18,7 @@ const Login = () => {
   const [form] = Form.useForm();
   const [errorsExists, setErrorsExists] = useState({});
   const [valueInput, setValueInput] = useState("");
-  const selectorUser = useSelector((state) => state.users.login);
+  const selectorUser = useSelector((state) => state.auth.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {

@@ -12,7 +12,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createAxios } from "../../Utils/createInstance";
-import { loginSuccess } from "../../redux/slice/userSlice";
+import { loginSuccess } from "../../redux/slice/authSlice";
+import { getUser } from "../../redux/slice/userSlice";
 import { deleteAllCart } from "../../redux/slice/cartSlice";
 import { createNewOrder } from "../../redux/slice/orderSlice";
 import styles from "./Checkout.module.scss";
@@ -25,12 +26,13 @@ const Checkout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
+  const getDetailUser = useSelector((state) => state.users.user);
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const onFinish = async (values) => {
-    let axiosJWT = createAxios(user, dispatch, loginSuccess);
     const dataOrders = {
       ...values,
       userId: user._id,
@@ -72,7 +74,15 @@ const Checkout = () => {
     }
   };
   useEffect(() => {
-    cart.length === 0 && navigate("/");
+    if (cart.length === 0) navigate("/");
+    (async () => {
+      const res = await dispatch(
+        getUser({ id: user._id, accessToken: user?.accessToken, axiosJWT })
+      );
+      form.setFieldsValue({
+        ...res.payload,
+      });
+    })();
   }, []);
 
   return (
@@ -246,7 +256,7 @@ const Checkout = () => {
                         <Form
                           form={form}
                           name="checkout"
-                          initialValues={{ ...user }}
+                          initialValues={{}}
                           layout="inline"
                           onFinish={onFinish}
                           autoComplete="off"

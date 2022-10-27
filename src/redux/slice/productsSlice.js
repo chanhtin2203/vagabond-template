@@ -11,11 +11,11 @@ export const getAllProducts = createAsyncThunk(
 );
 
 export const getProductByPagination = createAsyncThunk(
-  "products/productsFetching",
-  async ({ current, pageSize, search }) => {
+  "products/getProductByPagination",
+  async ({ current, pageSize, search, tabs }) => {
     const res = await axios.get(
       current && pageSize
-        ? `${BASE_URL}/products?pageIndex=${current}&pageSize=${pageSize}&search=${search}`
+        ? `${BASE_URL}/products?pageIndex=${current}&pageSize=${pageSize}&search=${search}&category=${tabs}`
         : `${BASE_URL}/products`
     );
     return res.data;
@@ -66,11 +66,22 @@ export const filterProducts = createAsyncThunk(
   }
 );
 
+export const addProductsByAdmin = createAsyncThunk(
+  "products/addProductsByAdmin",
+  async ({ values, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.post(`${BASE_URL}/products`, values, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState: {
     isLoading: false,
     products: [],
+    productsPagination: [],
     searchProd: [],
     productsRandom: [],
     product: {},
@@ -85,6 +96,17 @@ const productsSlice = createSlice({
       state.products = action.payload;
     },
     [getAllProducts.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // get all products by pagination
+    [getProductByPagination.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getProductByPagination.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.productsPagination = action.payload;
+    },
+    [getProductByPagination.rejected]: (state) => {
       state.isLoading = false;
     },
     // get all product random
@@ -128,6 +150,17 @@ const productsSlice = createSlice({
       state.searchProd = action.payload;
     },
     [searchProduct.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // add product
+    [addProductsByAdmin.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [addProductsByAdmin.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.products.push(action.payload);
+    },
+    [addProductsByAdmin.rejected]: (state) => {
       state.isLoading = false;
     },
   },

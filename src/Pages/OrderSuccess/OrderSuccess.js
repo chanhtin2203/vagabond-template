@@ -8,14 +8,14 @@ import { deleteAllCart } from "../../redux/slice/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../Utils/BaseUrl";
 import { createAxios } from "../../Utils/createInstance";
-import { loginSuccess } from "../../redux/slice/userSlice";
+import { loginSuccess } from "../../redux/slice/authSlice";
 
 const cx = classNames.bind(styles);
 
 export default function OrderSuccess() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
   const [error, setError] = useState({});
 
   useEffect(() => {

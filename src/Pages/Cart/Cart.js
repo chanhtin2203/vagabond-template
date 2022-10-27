@@ -22,7 +22,7 @@ const Cart = () => {
   const [productRemove, setProductRemove] = useState([]);
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
   const quantity = cart.map((item) => item.quantity).reduce((a, b) => a + b, 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();

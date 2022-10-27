@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 const Collection = ({ title, nameBtn, items = [], href }) => {
   const loading = useSelector((state) => state.products.isLoading);
   const [limit, setLimit] = useState(30);
-  console.log(items);
+ 
 
   return (
     <Spin spinning={loading}>

@@ -21,7 +21,7 @@ const Register = () => {
   const [errorsExists, setErrorsExists] = useState({});
   const [valueInput, setValueInput] = useState("");
   const [textInput, setTextInput] = useState("");
-  const selectorUser = useSelector((state) => state.users.login);
+  const selectorUser = useSelector((state) => state.auth.login);
   const onFinish = async (values) => {
     const data = { ...values, fullname: textInput };
     await axios

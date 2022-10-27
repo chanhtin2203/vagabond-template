@@ -1,14 +1,14 @@
 import { Button, Input, Form, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changePasswordUser, loginSuccess } from "../../redux/slice/userSlice";
+import { changePasswordUser, loginSuccess } from "../../redux/slice/authSlice";
 import { createAxios } from "../../Utils/createInstance";
 
 const ChangePassword = () => {
   const [form] = Form.useForm();
   const [textOldPassword, setTextOldPassword] = useState("");
   const [errorsExists, setErrorsExists] = useState("");
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
   const dispatch = useDispatch();
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 

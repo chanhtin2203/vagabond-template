@@ -1,5 +1,6 @@
-import Home from "./Pages/Home/Home";
+import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home/Home";
 import Products from "./Pages/Products/Products";
 import Product from "./Pages/Product/Product";
 import Cart from "./Pages/Cart/Cart";
@@ -12,14 +13,12 @@ import ResultSearch from "./Pages/ResultSearch/ResultSearch";
 import Orders from "./Pages/Orders/Orders";
 import OrderSuccess from "./Pages/OrderSuccess/OrderSuccess";
 import Users from "./Pages/Users/Users";
-import AdminHome from "./Pages/Admin/AdminDashboard/AdminDashboard";
-import { useSelector } from "react-redux";
 import HeaderAdmin from "./Pages/Admin/Components/HeaderAdmin/HeaderAdmin";
 import AdminDashboard from "./Pages/Admin/AdminDashboard/AdminDashboard";
 import AdminUser from "./Pages/Admin/AdminUser/AdminUser";
 import AdminProducts from "./Pages/Admin/AdminProducts/AdminProducts";
 function App() {
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
 
   return (
     <div className="App">

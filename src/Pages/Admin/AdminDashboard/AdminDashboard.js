@@ -10,14 +10,14 @@ import ChartDashBoard from "./ChartDashBoard";
 import classNames from "classnames/bind";
 import { createAxios } from "../../../Utils/createInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "../../../redux/slice/userSlice";
+import { loginSuccess } from "../../../redux/slice/authSlice";
 import { getIncomeOrders } from "../../../redux/slice/orderSlice";
 
 const cx = classNames.bind(styles);
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.login);
+  const user = useSelector((state) => state.auth.login);
 
   useEffect(() => {
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
