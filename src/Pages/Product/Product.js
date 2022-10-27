@@ -38,9 +38,9 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
       setSize(size[0]);
       setCategory(category);
       setBreadcrumb(
-        category === "tee" || category === "jacket"
+        category === "tee" || category === "jacket" || category === "madmonks"
           ? "Áo"
-          : category === "quan"
+          : category === "pants"
           ? "Quần"
           : "Phụ kiện"
       );

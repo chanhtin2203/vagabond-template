@@ -14,6 +14,7 @@ import {
   Row,
   Select,
   Space,
+  Switch,
   Table,
   Tabs,
   Tag,
@@ -58,6 +59,7 @@ const AdminProducts = () => {
   const [nameCategory, setNameCategory] = useState("");
   const [itemsSubCategory, setItemsSubCategory] = useState([]);
   const [nameSubCategory, setNameSubCategory] = useState("");
+  const [isUpdateProducts, setIsUpdateProducts] = useState(false);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login);
@@ -67,14 +69,20 @@ const AdminProducts = () => {
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const showModal = async (id) => {
-    const res = await dispatch(getDetailProduct(id));
-    if (res.payload) {
-      form.setFieldsValue({
-        ...res.payload,
-      });
-      setImageUrl(res.payload.image);
+    if (id !== null) {
+      const res = await dispatch(getDetailProduct(id));
+      if (res.payload) {
+        form.setFieldsValue({
+          ...res.payload,
+        });
+        setImageUrl(res.payload.image);
+        setIsUpdateProducts(true);
+      }
+      setIsModalOpen(true);
+    } else {
+      setIsUpdateProducts(false);
+      setIsModalOpen(true);
     }
-    setIsModalOpen(true);
   };
   const onFinish = async (values) => {
     if (values._id) {
@@ -99,6 +107,7 @@ const AdminProducts = () => {
         message.error("Vui lòng chọn hình ảnh");
         return;
       }
+
       const res = await dispatch(
         addProductsByAdmin({ values, accessToken: user?.accessToken, axiosJWT })
       );
@@ -387,7 +396,7 @@ const AdminProducts = () => {
             icon={<AppstoreAddOutlined />}
             size="large"
             style={{ float: "right" }}
-            onClick={showModal}
+            onClick={() => showModal(null)}
           >
             Thêm sản phẩm
           </Button>
@@ -677,7 +686,9 @@ const AdminProducts = () => {
             ]}
           >
             <InputNumber
-              style={{ width: "50%" }}
+              style={{
+                width: "100%",
+              }}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
@@ -685,6 +696,14 @@ const AdminProducts = () => {
               parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
             />
           </Form.Item>
+          {isUpdateProducts && (
+            <Form.Item label="Trong kho" name="inStock" valuePropName="checked">
+              <Switch
+                checkedChildren={"Còn hàng"}
+                unCheckedChildren={"Hết hàng"}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </div>
