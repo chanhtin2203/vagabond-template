@@ -76,6 +76,26 @@ export const addProductsByAdmin = createAsyncThunk(
   }
 );
 
+export const updateProductsByAdmin = createAsyncThunk(
+  "products/updateProductsByAdmin",
+  async ({ values, id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.put(`${BASE_URL}/products/edit/${id}`, values, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const deleteProductsByAdmin = createAsyncThunk(
+  "products/deleteProductsByAdmin",
+  async ({ id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.delete(`${BASE_URL}/products/delete/${id}`, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
 const productsSlice = createSlice({
   name: "products",
   initialState: {
@@ -158,9 +178,36 @@ const productsSlice = createSlice({
     },
     [addProductsByAdmin.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.products.push(action.payload);
+      state.productsPagination.products.push(action.payload);
     },
     [addProductsByAdmin.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // update product
+    [updateProductsByAdmin.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [updateProductsByAdmin.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.productsPagination.products = state.productsPagination.products.map(
+        (item) => (item._id === action.payload._id ? action.payload : item)
+      );
+    },
+    [updateProductsByAdmin.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    // delete product
+    [deleteProductsByAdmin.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteProductsByAdmin.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.productsPagination.products =
+        state.productsPagination.products.filter(
+          (item) => item._id !== action.payload._id
+        );
+    },
+    [deleteProductsByAdmin.rejected]: (state) => {
       state.isLoading = false;
     },
   },

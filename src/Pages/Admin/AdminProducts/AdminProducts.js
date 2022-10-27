@@ -35,7 +35,10 @@ import { createAxios } from "../../../Utils/createInstance";
 import { loginSuccess } from "../../../redux/slice/authSlice";
 import {
   addProductsByAdmin,
+  deleteProductsByAdmin,
   getProductByPagination,
+  getDetailProduct,
+  updateProductsByAdmin,
 } from "../../../redux/slice/productsSlice";
 
 const { Option } = Select;
@@ -64,21 +67,49 @@ const AdminProducts = () => {
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const showModal = async (id) => {
+    const res = await dispatch(getDetailProduct(id));
+    if (res.payload) {
+      form.setFieldsValue({
+        ...res.payload,
+      });
+      setImageUrl(res.payload.image);
+    }
     setIsModalOpen(true);
   };
   const onFinish = async (values) => {
-    if (values.image === undefined) {
-      message.error("Vui lòng chọn hình ảnh");
-      return;
-    }
-    const res = await dispatch(
-      addProductsByAdmin({ values, accessToken: user?.accessToken, axiosJWT })
-    );
-    if (res.type.includes("fulfilled")) {
-      form.resetFields();
-      setIsModalOpen(false);
-      setImageUrl("");
-      message.success("Thêm sản phẩm thành công");
+    if (values._id) {
+      const res = await dispatch(
+        updateProductsByAdmin({
+          id: values._id,
+          values,
+          accessToken: user?.accessToken,
+          axiosJWT,
+        })
+      );
+
+      if (res.type.includes("fulfilled")) {
+        form.resetFields();
+        setIsModalOpen(false);
+        message.success("Sửa sản phẩm thành công");
+      } else {
+        message.error("Sửa sản phẩm thất bại");
+      }
+    } else {
+      if (values.image === undefined) {
+        message.error("Vui lòng chọn hình ảnh");
+        return;
+      }
+      const res = await dispatch(
+        addProductsByAdmin({ values, accessToken: user?.accessToken, axiosJWT })
+      );
+      if (res.type.includes("fulfilled")) {
+        form.resetFields();
+        setIsModalOpen(false);
+        setImageUrl("");
+        message.success("Thêm sản phẩm thành công");
+      } else {
+        message.error("Thêm sản phẩm thất bại");
+      }
     }
   };
   const handleCancel = () => {
@@ -87,7 +118,16 @@ const AdminProducts = () => {
     setImageUrl("");
   };
 
-  const confirmDelete = async (id) => {};
+  const confirmDelete = async (id) => {
+    const res = await dispatch(
+      deleteProductsByAdmin({ id, accessToken: user?.accessToken, axiosJWT })
+    );
+    if (res.type.includes("fulfilled")) {
+      message.success("Xóa sản phẩm thành công");
+    } else {
+      message.error("Xóa sản phẩm thất bại");
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -103,13 +143,7 @@ const AdminProducts = () => {
       setItemsCategory(res.payload.category);
       setItemsSubCategory(res.payload.subCategory);
     })();
-  }, [
-    pagination,
-    dispatch,
-    pagination.pageIndex,
-    pagination.pageSize,
-    pagination.search,
-  ]);
+  }, [dispatch, pagination]);
 
   const handleChangePagination = (page) => {
     setPagination({
@@ -173,7 +207,7 @@ const AdminProducts = () => {
       title: "Hình ảnh",
       dataIndex: "image",
       key: "image",
-      width: 95,
+      width: 105,
       render: (record) => <Image src={record} width={150} height={150} />,
     },
     {
@@ -194,7 +228,7 @@ const AdminProducts = () => {
       title: "Trong kho",
       dataIndex: "inStock",
       key: "inStock",
-      width: 150,
+      width: 110,
       render: (record) => {
         let title = record ? "Còn hàng" : "Hết hàng";
         let color = record ? "green" : "volcano";
@@ -295,7 +329,7 @@ const AdminProducts = () => {
 
   const handleChangeSelectCategory = (value) => {
     const res = itemsSubCategory.filter((item) =>
-      item.includes(value.toUpperCase())
+      item.toLowerCase().includes(value)
     );
     res.length > 0 &&
       form.setFieldsValue({
@@ -319,7 +353,7 @@ const AdminProducts = () => {
   };
   const handleChangeSelectSubCategory = (value) => {
     const res = itemsCategory.filter((item) =>
-      value.includes(item.toUpperCase())
+      value.includes(item.toLowerCase())
     );
     res.length > 0 &&
       form.setFieldsValue({
@@ -327,10 +361,6 @@ const AdminProducts = () => {
       });
   };
   // select subCategory
-
-  // select size
-  const handleChangeSize = (value) => {};
-  // select size
 
   return (
     <div>
@@ -366,7 +396,7 @@ const AdminProducts = () => {
       <Divider>Bảng thông tin</Divider>
       <Tabs
         onChange={onChangeTabs}
-        items={products.subCategory?.map((item) => {
+        items={itemsSubCategory.map((item) => {
           return {
             key: item,
             label: item.replace(
@@ -445,7 +475,7 @@ const AdminProducts = () => {
             Trở lại
           </Button>,
           <Button key="submit" form="products" htmlType="submit" type="primary">
-            Thêm
+            Tiếp tục
           </Button>,
         ]}
       >
@@ -456,7 +486,7 @@ const AdminProducts = () => {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item label="Id">
+          <Form.Item label="Id" name="_id">
             <Input disabled />
           </Form.Item>
           <Form.Item
@@ -630,7 +660,6 @@ const AdminProducts = () => {
                 width: "100%",
               }}
               placeholder="Chọn kích cỡ"
-              onChange={handleChangeSize}
             >
               {size.map((item) => (
                 <Option key={item}>{item}</Option>
