@@ -17,6 +17,7 @@ import HeaderAdmin from "./Pages/Admin/Components/HeaderAdmin/HeaderAdmin";
 import AdminDashboard from "./Pages/Admin/AdminDashboard/AdminDashboard";
 import AdminUser from "./Pages/Admin/AdminUser/AdminUser";
 import AdminProducts from "./Pages/Admin/AdminProducts/AdminProducts";
+import AdminOrders from "./Pages/Admin/AdminOrders/AdminOrders";
 function App() {
   const user = useSelector((state) => state.auth.login);
 
@@ -44,7 +45,7 @@ function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<AdminUser />} />
               <Route path="products" element={<AdminProducts />} />
-              <Route path="orders" element />
+              <Route path="orders" element={<AdminOrders />} />
               <Route path="payment" element />
             </Route>
           </>

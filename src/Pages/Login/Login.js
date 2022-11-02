@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import Header from "../../Components/Header/Header";

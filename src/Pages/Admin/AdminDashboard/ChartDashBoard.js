@@ -18,7 +18,7 @@ export default function ChartDashBoard() {
     series: [
       {
         name: "Monthly bill",
-        data: data,
+        data: data || [],
       },
     ],
     options: {

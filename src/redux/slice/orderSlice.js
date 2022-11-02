@@ -24,8 +24,31 @@ export const getAllOrdersUser = createAsyncThunk(
 
 export const getAllOrders = createAsyncThunk(
   "orders/getAllOrders",
-  async ({ accessToken, axiosJWT }) => {
-    const res = await axiosJWT.get(`${BASE_URL}/orders`, {
+  async ({ key, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.get(
+      key ? `${BASE_URL}/orders?key=${key}` : `${BASE_URL}/orders`,
+      {
+        headers: { token: `Beaer ${accessToken}` },
+      }
+    );
+    return res.data;
+  }
+);
+
+export const getDetailOrders = createAsyncThunk(
+  "orders/getDetailOrders",
+  async ({ id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.get(`${BASE_URL}/orders/detail/${id}`, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const updateOrders = createAsyncThunk(
+  "orders/updateOrders",
+  async ({ id, values, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.put(`${BASE_URL}/orders/edit/${id}`, values, {
       headers: { token: `Beaer ${accessToken}` },
     });
     return res.data;
@@ -45,8 +68,9 @@ export const getIncomeOrders = createAsyncThunk(
 const orders = createSlice({
   name: "orders",
   initialState: {
-    orders: null,
-    allOrders: null,
+    orders: [],
+    order: {},
+    allOrders: [],
     income: null,
     isFetching: false,
   },
@@ -92,6 +116,30 @@ const orders = createSlice({
       state.income = action.payload;
     },
     [getIncomeOrders.rejected]: (state) => {
+      state.isFetching = false;
+    },
+    // get detail orders
+    [getDetailOrders.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [getDetailOrders.fulfilled]: (state, action) => {
+      state.isFetching = false;
+      state.order = action.payload;
+    },
+    [getDetailOrders.rejected]: (state) => {
+      state.isFetching = false;
+    },
+    // get detail orders
+    [updateOrders.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [updateOrders.fulfilled]: (state, action) => {
+      state.isFetching = false;
+      state.allOrders = state.allOrders.map((item) =>
+        item._id === action.payload._id ? action.payload : item
+      );
+    },
+    [updateOrders.rejected]: (state) => {
       state.isFetching = false;
     },
   },

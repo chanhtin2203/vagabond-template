@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Breadcrumb,
   Button,
@@ -27,7 +29,6 @@ const Checkout = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login);
-  const getDetailUser = useSelector((state) => state.users.user);
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
   let axiosJWT = createAxios(user, dispatch, loginSuccess);

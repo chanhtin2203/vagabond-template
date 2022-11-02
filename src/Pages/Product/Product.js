@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Empty, Image, Row, Skeleton } from "antd";
+import { Breadcrumb, Col, Image, Row, Skeleton } from "antd";
 import classNames from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
@@ -12,7 +12,6 @@ import { getDetailProduct } from "../../redux/slice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../redux/slice/cartSlice";
 import { addViewedsProducts } from "../../redux/slice/viewedProducts";
-import Collection from "../../Components/Collection/Collection";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {

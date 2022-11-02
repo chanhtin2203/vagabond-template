@@ -8,7 +8,6 @@ import styles from "./Home.module.scss";
 import { Link } from "react-router-dom";
 import Collection from "../../Components/Collection/Collection";
 import { useDispatch, useSelector } from "react-redux";
-import _ from "lodash";
 import { getAllProducts } from "../../redux/slice/productsSlice";
 
 const cx = classNames.bind(styles);

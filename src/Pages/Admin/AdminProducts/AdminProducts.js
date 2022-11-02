@@ -205,12 +205,14 @@ const AdminProducts = () => {
         return <h4>{index + 10 * (pageIndex - 1) + 1}</h4>;
       },
       width: 50,
+      align: "center",
     },
     {
       title: "Tên sản phẩm",
       dataIndex: "title",
       key: "title",
       width: 200,
+      align: "center",
     },
     {
       title: "Hình ảnh",
@@ -218,6 +220,7 @@ const AdminProducts = () => {
       key: "image",
       width: 105,
       render: (record) => <Image src={record} width={150} height={150} />,
+      align: "center",
     },
     {
       title: "Giá",
@@ -232,6 +235,7 @@ const AdminProducts = () => {
           }).format(record)}
         </Tag>
       ),
+      align: "center",
     },
     {
       title: "Trong kho",
@@ -243,6 +247,7 @@ const AdminProducts = () => {
         let color = record ? "green" : "volcano";
         return <Tag color={color}>{title}</Tag>;
       },
+      align: "center",
     },
     {
       title: "Thao tác",
@@ -263,6 +268,7 @@ const AdminProducts = () => {
           </Popconfirm>
         </Space>
       ),
+      align: "center",
     },
   ];
 
@@ -686,9 +692,6 @@ const AdminProducts = () => {
             ]}
           >
             <InputNumber
-              style={{
-                width: "100%",
-              }}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }

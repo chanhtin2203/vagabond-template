@@ -1,18 +1,20 @@
+/* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {
-  ControlOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { FaProductHunt } from "react-icons/fa";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import "antd/lib/modal/style/index.css";
 import React, { useEffect, useState } from "react";
+import {
+  FcBarChart,
+  FcBusinessman,
+  FcInTransit,
+  FcPaid,
+  FcTrademark,
+} from "react-icons/fc";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import "./Admin.scss";
 import Profile from "../../Components/Profile/Profile";
+import "./Admin.scss";
 
 const { Header, Sider, Content } = Layout;
 
@@ -35,17 +37,29 @@ const HeaderAdmin = () => {
     getItem(
       <NavLink to={"/admin/dashboard"}>Bảng điều khiển</NavLink>,
       "dashboard",
-      <ControlOutlined />
+      <FcBarChart />
     ),
     getItem(
       <NavLink to={"/admin/users"}>Quản lý tài khoản</NavLink>,
       "users",
-      <UserOutlined />
+      <FcBusinessman />
     ),
     getItem(
       <NavLink to={"/admin/products"}>Quản lý sản phẩm</NavLink>,
       "products",
-      <FaProductHunt />
+      <FcInTransit />
+    ),
+    getItem(
+      <NavLink to={"/admin/orders"}>Quản lý đơn hàng</NavLink>,
+      "orders",
+      <FcPaid />
+    ),
+    getItem(
+      <a href="https://sandbox.vnpayment.vn/merchantv2/" target="_blank">
+        Quản lý thanh toán
+      </a>,
+      "payment",
+      <FcTrademark />
     ),
   ];
 
@@ -54,6 +68,7 @@ const HeaderAdmin = () => {
   };
 
   useEffect(() => {
+    document.title = "VAGABOND - ADMIN";
     setSelected(
       location.pathname.split("/").length > 3
         ? location.pathname.split("/")[3]

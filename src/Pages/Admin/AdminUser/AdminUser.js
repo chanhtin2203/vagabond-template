@@ -96,6 +96,9 @@ const AdminUser = () => {
         })
       );
     })();
+  }, []);
+
+  useEffect(() => {
     (async () => {
       await dispatch(
         getAllOrders({
@@ -128,16 +131,19 @@ const AdminUser = () => {
       title: "Tên đầy đủ",
       dataIndex: "fullname",
       key: "fullname",
+      align: "center",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      align: "center",
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
+      align: "center",
     },
     {
       title: "Đã mua",
@@ -156,6 +162,7 @@ const AdminUser = () => {
           </Tag>
         );
       },
+      align: "center",
     },
     {
       title: "Cấp độ",
@@ -184,6 +191,7 @@ const AdminUser = () => {
           )}
         </div>
       ),
+      align: "center",
     },
     {
       title: "Thao tác",
@@ -203,6 +211,7 @@ const AdminUser = () => {
           </Popconfirm>
         </Space>
       ),
+      align: "center",
     },
   ];
 

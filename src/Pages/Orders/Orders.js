@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
@@ -37,7 +38,7 @@ const Orders = () => {
   useEffect(() => {
     if (user === null) navigate("/");
     dispatch(getAllProducts());
-  }, [dispatch, navigate, user]);
+  }, []);
 
   const showDrawer = (record) => {
     products?.filter((item) => item._id === record && setdetailProduct(item));
@@ -101,6 +102,7 @@ const Orders = () => {
       dataIndex: "payDate",
       key: "payDate",
       width: 300,
+      fixed: "right",
     },
     {
       title: "Thanh toán",
@@ -125,18 +127,24 @@ const Orders = () => {
       width: 250,
       fixed: "right",
       render: (record) => {
-        let color =
-          record === "pending"
-            ? "orange"
-            : record === "cancel"
-            ? "magenta"
-            : "green";
-        let text =
-          record === "pending"
-            ? "Đang chờ giao hàng"
-            : record === "cancel"
-            ? "Hủy đơn hàng"
-            : "Đã giao hàng thành công";
+        let text = "";
+        let color = "";
+        switch (record) {
+          case "pending":
+            text = "Đang chờ xác nhận đơn hàng";
+            color = "orange";
+            break;
+          case "reject":
+            text = "Hủy đơn hàng";
+            color = "magenta";
+            break;
+          case "success":
+            text = "Xác nhận đơn hàng thành công";
+            color = "green";
+            break;
+          default:
+            break;
+        }
         return (
           <Tag color={color} key={record}>
             {text}
@@ -157,7 +165,7 @@ const Orders = () => {
         })
       );
     })();
-  }, [dispatch, user]);
+  }, []);
 
   const nestedColumns = [
     {
