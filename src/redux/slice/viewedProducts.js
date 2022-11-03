@@ -21,9 +21,15 @@ const viewedProducts = createSlice({
         }
       }
     },
+    removeViewedsProducts: (state, action) => {
+      state.products = state.products.filter(
+        (item) => item._id !== action.payload
+      );
+    },
   },
 });
 
-export const { addViewedsProducts } = viewedProducts.actions;
+export const { addViewedsProducts, removeViewedsProducts } =
+  viewedProducts.actions;
 
 export default viewedProducts.reducer;

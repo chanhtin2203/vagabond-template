@@ -24,9 +24,11 @@ export const getAllOrdersUser = createAsyncThunk(
 
 export const getAllOrders = createAsyncThunk(
   "orders/getAllOrders",
-  async ({ key, accessToken, axiosJWT }) => {
+  async ({ key = "all", search = "", accessToken, axiosJWT }) => {
     const res = await axiosJWT.get(
-      key ? `${BASE_URL}/orders?key=${key}` : `${BASE_URL}/orders`,
+      key && search === ""
+        ? `${BASE_URL}/orders?key=${key}`
+        : `${BASE_URL}/orders?key=${key}&search=${search}`,
       {
         headers: { token: `Beaer ${accessToken}` },
       }
@@ -49,6 +51,16 @@ export const updateOrders = createAsyncThunk(
   "orders/updateOrders",
   async ({ id, values, accessToken, axiosJWT }) => {
     const res = await axiosJWT.put(`${BASE_URL}/orders/edit/${id}`, values, {
+      headers: { token: `Beaer ${accessToken}` },
+    });
+    return res.data;
+  }
+);
+
+export const deleteOrders = createAsyncThunk(
+  "orders/deleteOrders",
+  async ({ id, accessToken, axiosJWT }) => {
+    const res = await axiosJWT.delete(`${BASE_URL}/orders/delete/${id}`, {
       headers: { token: `Beaer ${accessToken}` },
     });
     return res.data;
@@ -129,17 +141,28 @@ const orders = createSlice({
     [getDetailOrders.rejected]: (state) => {
       state.isFetching = false;
     },
-    // get detail orders
+    // update orders
     [updateOrders.pending]: (state) => {
       state.isFetching = true;
     },
     [updateOrders.fulfilled]: (state, action) => {
       state.isFetching = false;
-      state.allOrders = state.allOrders.map((item) =>
-        item._id === action.payload._id ? action.payload : item
-      );
+      state.order = action.payload;
     },
     [updateOrders.rejected]: (state) => {
+      state.isFetching = false;
+    },
+    // delete orders
+    [deleteOrders.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [deleteOrders.fulfilled]: (state, action) => {
+      state.isFetching = false;
+      state.allOrders = state.allOrders.filter(
+        (item) => item._id !== action.payload._id
+      );
+    },
+    [deleteOrders.rejected]: (state) => {
       state.isFetching = false;
     },
   },

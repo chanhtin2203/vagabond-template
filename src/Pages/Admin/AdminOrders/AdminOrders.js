@@ -10,7 +10,9 @@ import {
   DatePicker,
   Divider,
   Drawer,
+  Form,
   Input,
+  message,
   Popconfirm,
   Row,
   Space,
@@ -23,16 +25,18 @@ import classNames from "classnames/bind";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { BsBagCheck, BsBagX } from "react-icons/bs";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { AiOutlineDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { loginSuccess } from "../../../redux/slice/authSlice";
 import {
+  deleteOrders,
   getAllOrders,
   getDetailOrders,
   updateOrders,
 } from "../../../redux/slice/orderSlice";
 import { getAllProducts } from "../../../redux/slice/productsSlice";
-import { getAllUser } from "../../../redux/slice/userSlice";
 import { createAxios } from "../../../Utils/createInstance";
 import styles from "./AdminOrders.module.scss";
 
@@ -47,8 +51,10 @@ const DescriptionItem = ({ title, content }) => (
   </div>
 );
 const AdminOrders = () => {
+  const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState(null);
+  const [search, setSearch] = useState("");
+  const [update, setUpdate] = useState(false);
   const [tabsValue, setTabsValue] = useState("all");
   const dispatch = useDispatch();
   const [pagination, setPagination] = useState({
@@ -58,14 +64,15 @@ const AdminOrders = () => {
   const user = useSelector((state) => state.auth.login);
   const detailOrder = useSelector((state) => state.orders.order);
   const allOrders = useSelector((state) => state.orders.allOrders);
+  const isLoading = useSelector((state) => state.orders.loading);
   const allProducts = useSelector((state) => state.products.products);
-  const allUsers = useSelector((state) => state.users.users);
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   useEffect(() => {
     (async () => {
       await dispatch(
         getAllOrders({
+          search: search,
           key: tabsValue,
           accessToken: user.accessToken,
           axiosJWT,
@@ -76,28 +83,29 @@ const AdminOrders = () => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(getAllUser({ accessToken: user.accessToken, axiosJWT }));
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
       await dispatch(getAllProducts());
     })();
   }, []);
 
-  useEffect(() => {
-    allUsers?.filter(
-      (item) => item._id === detailOrder.userId && setName(item.fullname)
+  const onSearch = async (value) => {
+    setSearch(value);
+    await dispatch(
+      getAllOrders({
+        search: value,
+        key: tabsValue,
+        accessToken: user.accessToken,
+        axiosJWT,
+      })
     );
-  }, [detailOrder]);
-
-  const onSearch = async (value) => {};
+  };
 
   const showDrawer = async (id) => {
-    await dispatch(
+    const res = await dispatch(
       getDetailOrders({ id, accessToken: user.accessToken, axiosJWT })
     );
+    form.setFieldsValue({
+      ...res.payload,
+    });
     setOpen(true);
   };
 
@@ -126,12 +134,8 @@ const AdminOrders = () => {
     {
       title: "Tên khách hàng",
       key: "fullname",
-      dataIndex: "userId",
+      dataIndex: "fullname",
       align: "center",
-      render: (record) =>
-        allUsers
-          ?.filter((item) => item._id === record)
-          .map((u) => <div key={u._id}>{u.fullname}</div>),
     },
     {
       title: "Ngày",
@@ -185,6 +189,24 @@ const AdminOrders = () => {
     },
   ];
 
+  const onFinish = async (values) => {
+    const res = await dispatch(
+      updateOrders({
+        id: detailOrder._id,
+        values: { ...detailOrder, ...values },
+        accessToken: user.accessToken,
+        axiosJWT,
+      })
+    );
+    if (res.type.includes("fulfilled")) {
+      message.success("Sửa thông tin đơn hàng thành công");
+      setUpdate(false);
+    } else {
+      message.error("Sửa thông tin đơn hàng thất bại");
+      setUpdate(true);
+    }
+  };
+
   const handleChangePagination = (page) => {
     setPagination({
       ...pagination,
@@ -206,6 +228,22 @@ const AdminOrders = () => {
         axiosJWT,
       })
     );
+    setUpdate(false);
+  };
+
+  const handleUpdateOrder = () => {
+    setUpdate(!update);
+  };
+
+  const handleDeleteOrder = async () => {
+    await dispatch(
+      deleteOrders({
+        id: detailOrder._id,
+        accessToken: user.accessToken,
+        axiosJWT,
+      })
+    );
+    setOpen(false);
   };
 
   return (
@@ -220,7 +258,7 @@ const AdminOrders = () => {
       <Row>
         <Col xs={12}>
           <Input.Search
-            placeholder="Tìm kiếm đơn hàng"
+            placeholder="Tìm kiếm tên khách hàng"
             allowClear
             size="large"
             enterButton
@@ -250,6 +288,7 @@ const AdminOrders = () => {
         <Table
           columns={columns}
           dataSource={allOrders}
+          loading={isLoading}
           rowKey="_id"
           scroll={{ y: 500 }}
           pagination={{
@@ -316,107 +355,200 @@ const AdminOrders = () => {
                 Hủy đơn hàng
               </Button>
             </Popconfirm>
+            <Button
+              icon={<Icon component={MdOutlineModeEdit} />}
+              style={{
+                background: "#000",
+                borderColor: "#000",
+                color: "#fff",
+              }}
+              onClick={handleUpdateOrder}
+            >
+              Sửa đơn hàng
+            </Button>
+          </Space>
+        )}
+        {detailOrder.status === "reject" && (
+          <Space>
+            <Popconfirm
+              title="Bạn có chắc chắn xóa đơn hàng?"
+              onConfirm={handleDeleteOrder}
+              okText="Đồng ý"
+              cancelText="Không"
+              placement="bottom"
+            >
+              <Button
+                icon={<Icon component={AiOutlineDelete} />}
+                style={{
+                  background: "#E14D2A",
+                  borderColor: "#E14D2A",
+                  color: "#fff",
+                }}
+              >
+                Xóa đơn hàng
+              </Button>
+            </Popconfirm>
           </Space>
         )}
 
         <Divider />
-        <h3 className="site-description-item-profile-p">Thông tin đơn hàng</h3>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Mã đơn hàng" content={detailOrder._id} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem
-              title="Tổng tiền"
-              content={new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(detailOrder.amount)}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Tên khách hàng" content={name} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem
-              title="Số điện thoại"
-              content={detailOrder.phone}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Địa chỉ" content={detailOrder.address} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem
-              title="Trạng thái"
-              content={
-                detailOrder.status === "success"
-                  ? "Xác nhận thành công"
-                  : detailOrder.status === "reject"
-                  ? "Hủy đơn hàng"
-                  : "Đang chờ xác nhận"
-              }
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem
-              title="Thanh toán"
-              content={
-                detailOrder.payment ? "Thanh toán thẻ" : "Thanh toán tiền mặt"
-              }
-            />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem
-              title="Ngày thanh toán"
-              content={detailOrder.payDate}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="VNP Code" content={detailOrder.vnpCode} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Bank Code" content={detailOrder.bankCode} />
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          {detailOrder.products?.map((dt) =>
-            allProducts.map(
-              (item) =>
-                item._id === dt.productId && (
-                  <Col span={8} key={item._id}>
-                    <Badge.Ribbon text={dt.quantity} color="black">
-                      <Card
-                        hoverable
-                        bordered={true}
-                        cover={
-                          <Tooltip title={item.title} color={"black"}>
-                            <img alt={item.title} src={item.image} />
-                          </Tooltip>
-                        }
-                      >
-                        <Card.Meta
-                          title={item.title}
-                          description={new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(item.price)}
-                        />
-                      </Card>
-                    </Badge.Ribbon>
-                  </Col>
-                )
-            )
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <h3 className="site-description-item-profile-p">
+            Thông tin đơn hàng
+          </h3>
+          {update && (
+            <Button type="primary" htmlType="submit" form="orders">
+              Sửa
+            </Button>
           )}
-        </Row>
+        </div>
+
+        <Form
+          form={form}
+          name="orders"
+          initialValues={{}}
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <Row>
+            <Col span={12}>
+              <DescriptionItem
+                title="Tên khách hàng"
+                content={detailOrder.fullname}
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Tổng tiền"
+                content={new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(detailOrder.amount)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              {update ? (
+                <Form.Item
+                  name="phone"
+                  label="Số điện thoại"
+                  rules={[
+                    {
+                      pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                      message: "Không phải là số điện thoại",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              ) : (
+                <DescriptionItem
+                  title="Số điện thoại"
+                  content={detailOrder.phone}
+                />
+              )}
+            </Col>
+            <Col span={12}>
+              {update ? (
+                <Form.Item name="note" label="Ghi chú">
+                  <Input.TextArea />
+                </Form.Item>
+              ) : (
+                <DescriptionItem title="Ghi chú" content={detailOrder.note} />
+              )}
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              {update ? (
+                <Form.Item name="address" label="Địa chỉ">
+                  <Input.TextArea />
+                </Form.Item>
+              ) : (
+                <DescriptionItem
+                  title="Địa chỉ"
+                  content={detailOrder.address}
+                />
+              )}
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Trạng thái"
+                content={
+                  detailOrder.status === "success"
+                    ? "Xác nhận thành công"
+                    : detailOrder.status === "reject"
+                    ? "Hủy đơn hàng"
+                    : "Đang chờ xác nhận"
+                }
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem
+                title="Thanh toán"
+                content={
+                  detailOrder.payment ? "Thanh toán thẻ" : "Thanh toán tiền mặt"
+                }
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Ngày thanh toán"
+                content={detailOrder.payDate}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem title="VNP Code" content={detailOrder.vnpCode} />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Bank Code"
+                content={detailOrder.bankCode}
+              />
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            {detailOrder.products?.map((dt) =>
+              allProducts.map(
+                (item) =>
+                  item._id === dt.productId && (
+                    <Col span={8} key={item._id}>
+                      <Badge.Ribbon text={dt.quantity} color="black">
+                        <Card
+                          hoverable
+                          bordered={true}
+                          cover={
+                            <Tooltip title={item.title} color={"black"}>
+                              <img alt={item.title} src={item.image} />
+                            </Tooltip>
+                          }
+                        >
+                          <Card.Meta
+                            title={item.title}
+                            description={new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          />
+                        </Card>
+                      </Badge.Ribbon>
+                    </Col>
+                  )
+              )
+            )}
+          </Row>
+        </Form>
       </Drawer>
     </div>
   );

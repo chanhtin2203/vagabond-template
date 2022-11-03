@@ -1,33 +1,38 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
-import classNames from "classnames/bind";
-import Header from "../../Components/Header/Header";
-import Footer from "../../Components/Footer/Footer";
-import styles from "./Orders.module.scss";
 import {
+  Badge,
   Breadcrumb,
-  Button,
+  Card,
   Col,
   Divider,
   Drawer,
   Row,
-  Space,
-  Table,
   Tag,
+  Tooltip,
 } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import classNames from "classnames/bind";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createAxios } from "../../Utils/createInstance";
-import { getAllOrdersUser } from "../../redux/slice/orderSlice";
+import { Link, useNavigate } from "react-router-dom";
+import Footer from "../../Components/Footer/Footer";
+import Header from "../../Components/Header/Header";
 import { loginSuccess } from "../../redux/slice/authSlice";
-import { MinusCircleTwoTone, PlusCircleTwoTone } from "@ant-design/icons";
+import { getAllOrdersUser } from "../../redux/slice/orderSlice";
 import { getAllProducts } from "../../redux/slice/productsSlice";
+import { createAxios } from "../../Utils/createInstance";
+import styles from "./Orders.module.scss";
 
 const cx = classNames.bind(styles);
+const DescriptionItem = ({ title, content }) => (
+  <div className={cx("site-description-item-profile-wrapper")}>
+    <p className={cx("site-description-item-profile-p-label")}>{title}:</p>
+    <strong>{content}</strong>
+  </div>
+);
 const Orders = () => {
   const [open, setOpen] = useState(false);
-  const [detailProduct, setdetailProduct] = useState({});
+  const [detailOrder, setDetailOrder] = useState({});
   const orders = useSelector((state) => state.orders.orders);
   const user = useSelector((state) => state.auth.login);
   const products = useSelector((state) => state.products.products);
@@ -41,118 +46,12 @@ const Orders = () => {
   }, []);
 
   const showDrawer = (record) => {
-    products?.filter((item) => item._id === record && setdetailProduct(item));
+    orders?.filter((item) => item._id === record && setDetailOrder(item));
     setOpen(true);
   };
   const onClose = () => {
     setOpen(false);
   };
-
-  const columns = [
-    {
-      title: "Mã đơn",
-      dataIndex: "_id",
-      key: "_id",
-      width: 250,
-      fixed: "left",
-      render: (text) => <a style={{ color: "#5800FF" }}>{text}</a>,
-    },
-    {
-      title: "Tên Khách hàng",
-      dataIndex: "userId",
-      key: "userId",
-      width: 250,
-      render: () => <div>{user?.fullname}</div>,
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
-      width: 250,
-      render: (record) => <div>{record}</div>,
-    },
-    {
-      title: "Tổng tiền",
-      dataIndex: "amount",
-      key: "amount",
-      width: 250,
-      render: (record) => (
-        <div>
-          {new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
-          }).format(record)}
-        </div>
-      ),
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-      width: 300,
-    },
-    {
-      title: "Ghi chú",
-      dataIndex: "note",
-      key: "note",
-      width: 300,
-    },
-    {
-      title: "Ngày",
-      dataIndex: "payDate",
-      key: "payDate",
-      width: 300,
-      fixed: "right",
-    },
-    {
-      title: "Thanh toán",
-      key: "payment",
-      dataIndex: "payment",
-      width: 200,
-      fixed: "right",
-      render: (record) => {
-        let color = record ? "green" : "geekblue";
-        let text = record ? "Thanh toán bằng thẻ" : "Thanh toán bằng tiền mặt";
-        return (
-          <Tag color={color} key={record}>
-            {text}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: "Trạng thái",
-      key: "status",
-      dataIndex: "status",
-      width: 250,
-      fixed: "right",
-      render: (record) => {
-        let text = "";
-        let color = "";
-        switch (record) {
-          case "pending":
-            text = "Đang chờ xác nhận đơn hàng";
-            color = "orange";
-            break;
-          case "reject":
-            text = "Hủy đơn hàng";
-            color = "magenta";
-            break;
-          case "success":
-            text = "Xác nhận đơn hàng thành công";
-            color = "green";
-            break;
-          default:
-            break;
-        }
-        return (
-          <Tag color={color} key={record}>
-            {text}
-          </Tag>
-        );
-      },
-    },
-  ];
 
   useEffect(() => {
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
@@ -167,61 +66,6 @@ const Orders = () => {
     })();
   }, []);
 
-  const nestedColumns = [
-    {
-      title: "Sản phẩm đã mua",
-      dataIndex: "products",
-      key: "products",
-      width: 250,
-      children: [
-        {
-          title: "Tên sản phẩm",
-          dataIndex: "productId",
-          key: "productId",
-          width: 250,
-          render: (record) =>
-            products?.map(
-              (item, index) =>
-                item._id === record && (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <a
-                      style={{ color: "#EB5353" }}
-                      onClick={() => showDrawer(record)}
-                    >
-                      {item.title}
-                    </a>
-                    <a
-                      style={{ textDecoration: "underline" }}
-                      onClick={() => showDrawer(record)}
-                    >
-                      Xem sản phẩm
-                    </a>
-                  </div>
-                )
-            ),
-        },
-        {
-          title: "Số lượng",
-          dataIndex: "quantity",
-          key: "quantity",
-          width: 250,
-        },
-        {
-          title: "Size",
-          dataIndex: "size",
-          key: "size",
-          width: 250,
-        },
-      ],
-    },
-  ];
   return (
     <>
       <Header />
@@ -233,93 +77,203 @@ const Orders = () => {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Đơn hàng</Breadcrumb.Item>
           </Breadcrumb>
-        </div>
-        <div className={cx("pageOrders")}>
-          <div className={cx("headingPageOrders")}>
-            <h1>Đơn hàng của bạn</h1>
-          </div>
-          <div className={cx("contentPageOrders")}>
-            <Table
-              columns={columns}
-              bordered
-              expandable={{
-                rowExpandable: (record) => true,
-                expandedRowRender: (record) => {
-                  if (record.products) {
-                    return (
-                      <Table
-                        columns={nestedColumns}
-                        dataSource={record.products}
-                        rowKey="_id"
-                        pagination={false}
-                        bordered
-                      />
-                    );
-                  }
-                },
-                expandIcon: ({ expanded, onExpand, record }) => {
-                  return expanded ? (
-                    <MinusCircleTwoTone
-                      onClick={(e) => {
-                        onExpand(record, e);
-                      }}
-                    />
-                  ) : (
-                    <PlusCircleTwoTone
-                      onClick={(e) => {
-                        onExpand(record, e);
-                      }}
-                    />
-                  );
-                },
-              }}
-              sticky
-              dataSource={orders}
-              rowKey={"_id"}
-              scroll={{
-                x: 1000,
-              }}
-            />
+
+          <div className={cx("pageOrders")}>
+            <div className={cx("headingPageOrders")}>
+              <h1>Đơn hàng của bạn</h1>
+            </div>
+            <div className={cx("contentPageOrders")}>
+              <div className="site-card-wrapper">
+                <Row gutter={16}>
+                  {orders.map((item) => (
+                    <Col span={8} key={item._id}>
+                      <Card
+                        onClick={() => showDrawer(item._id)}
+                        hoverable
+                        cover={
+                          <div style={{ padding: 10 }}>
+                            <p>
+                              Mã đơn: <strong>{item._id}</strong>
+                            </p>
+                            <p>
+                              Tên khách hàng: <strong>{item.fullname}</strong>
+                            </p>
+                            <p>
+                              Thanh toán:{" "}
+                              <strong>
+                                {item.payment ? (
+                                  <Tag color="orange">Thanh toán bằng thẻ</Tag>
+                                ) : (
+                                  <Tag color="blue">
+                                    Thanh toán bằng tiền mặt
+                                  </Tag>
+                                )}
+                              </strong>
+                            </p>
+                            <p>
+                              Trạng thái:{" "}
+                              <strong>
+                                {item.status === "success" ? (
+                                  <Tag color="green">
+                                    Đơn hàng xác nhận thành công
+                                  </Tag>
+                                ) : item.status === "pending" ? (
+                                  <Tag color="volcano">
+                                    Đơn hàng chờ xác nhận
+                                  </Tag>
+                                ) : (
+                                  <Tag color="red">Đơn hàng đã hủy</Tag>
+                                )}
+                              </strong>
+                            </p>
+                            <p>
+                              Ngày mua: <strong>{item.payDate}</strong>
+                            </p>
+                          </div>
+                        }
+                      >
+                        <Card.Meta
+                          title={
+                            <a style={{ color: "blue" }}>
+                              Xem chi tiết đơn hàng
+                            </a>
+                          }
+                        />
+                      </Card>
+                      <Divider />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            </div>
           </div>
         </div>
       </main>
       <Drawer
-        title="Chi tiết sản phẩm"
-        placement="right"
         size="large"
+        placement="right"
         closable={false}
         onClose={onClose}
         open={open}
-        extra={
-          <Space>
-            <Button onClick={onClose}>Hủy</Button>
-          </Space>
-        }
       >
-        <Row gutter={30}>
-          <Col xs={16}>
-            <div>
-              Tên sản phẩm: <strong>{detailProduct.title}</strong>
-            </div>
+        <h3
+          className="site-description-item-profile-p"
+          style={{
+            marginBottom: 24,
+          }}
+        >
+          Chi tiết đơn hàng
+        </h3>
+
+        <Divider />
+        <h4 className="site-description-item-profile-p">Thông tin đơn hàng</h4>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem
+              title="Tên khách hàng"
+              content={detailOrder.fullname}
+            />
           </Col>
-          <Col xs={8}>
-            <div>
-              Giá sản phẩm:{" "}
-              <strong style={{ color: "red" }}>
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(detailProduct.price)}
-              </strong>
-            </div>
+          <Col span={12}>
+            <DescriptionItem
+              title="Tổng tiền"
+              content={new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(detailOrder.amount)}
+            />
           </Col>
-          <Divider />
-          <Col xs={24}>
-            <div>
-              Hình ảnh:{" "}
-              <img src={detailProduct.image} alt={detailProduct.title} />
-            </div>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem
+              title="Số điện thoại"
+              content={detailOrder.phone}
+            />
           </Col>
+          <Col span={12}>
+            <DescriptionItem title="Ghi chú" content={detailOrder.note} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Địa chỉ" content={detailOrder.address} />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem
+              title="Trạng thái"
+              content={
+                detailOrder.status === "success"
+                  ? "Xác nhận thành công"
+                  : detailOrder.status === "reject"
+                  ? "Hủy đơn hàng"
+                  : "Đang chờ xác nhận"
+              }
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem
+              title="Thanh toán"
+              content={
+                detailOrder.payment ? "Thanh toán thẻ" : "Thanh toán tiền mặt"
+              }
+            />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem
+              title="Ngày thanh toán"
+              content={detailOrder.payDate}
+            />
+          </Col>
+        </Row>
+        {detailOrder.vnpCode !== "" && (
+          <Row>
+            <Col span={12}>
+              <DescriptionItem title="VNP Code" content={detailOrder.vnpCode} />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Bank Code"
+                content={detailOrder.bankCode}
+              />
+            </Col>
+          </Row>
+        )}
+
+        <br />
+        <Row gutter={16}>
+          {detailOrder.products?.map((dt) =>
+            products.map(
+              (item) =>
+                item._id === dt.productId && (
+                  <Col span={8} key={item._id}>
+                    <Badge.Ribbon text={dt.quantity} color="black">
+                      <Tooltip title={item.title} color={"black"}>
+                        <Card
+                          hoverable
+                          bordered={true}
+                          cover={<img alt={item.title} src={item.image} />}
+                        >
+                          <Card.Meta
+                            title={item.title}
+                            description={
+                              <span style={{ color: "red" }}>
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.price)}
+                              </span>
+                            }
+                          />
+                        </Card>
+                      </Tooltip>
+                    </Badge.Ribbon>
+                  </Col>
+                )
+            )
+          )}
         </Row>
       </Drawer>
       <Footer />

@@ -40,6 +40,7 @@ const AdminUser = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login);
   const allUsers = useSelector((state) => state.users.users);
+  const isLoading = useSelector((state) => state.users.loading);
   const allOrders = useSelector((state) => state.orders.allOrders);
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
@@ -257,7 +258,12 @@ const AdminUser = () => {
       </Row>
       <Divider>Bảng thông tin</Divider>
       <div className="tableUser">
-        <Table columns={columns} dataSource={allUsers} rowKey="_id" />
+        <Table
+          columns={columns}
+          dataSource={allUsers}
+          rowKey="_id"
+          loading={isLoading}
+        />
       </div>
       <Modal
         forceRender

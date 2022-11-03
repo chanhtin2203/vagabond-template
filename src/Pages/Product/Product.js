@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Breadcrumb, Col, Image, Row, Skeleton } from "antd";
 import classNames from "classnames/bind";
 import React, { useEffect, useState } from "react";
@@ -11,7 +12,10 @@ import Slider from "react-slick";
 import { getDetailProduct } from "../../redux/slice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../redux/slice/cartSlice";
-import { addViewedsProducts } from "../../redux/slice/viewedProducts";
+import {
+  addViewedsProducts,
+  removeViewedsProducts,
+} from "../../redux/slice/viewedProducts";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
@@ -32,17 +36,21 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   useEffect(() => {
     const getDetail = async () => {
       const res = await dispatch(getDetailProduct(id));
-      if (res.payload === undefined) navigate("/");
-      const { category, size } = res.payload;
-      setSize(size[0]);
-      setCategory(category);
-      setBreadcrumb(
-        category === "tee" || category === "jacket" || category === "madmonks"
-          ? "Áo"
-          : category === "pants"
-          ? "Quần"
-          : "Phụ kiện"
-      );
+      if (res.payload === undefined || res.payload === null) {
+        await dispatch(removeViewedsProducts(id));
+        navigate(-1);
+      } else {
+        const { category, size } = res.payload;
+        setSize(size[0]);
+        setCategory(category);
+        setBreadcrumb(
+          category === "tee" || category === "jacket" || category === "madmonks"
+            ? "Áo"
+            : category === "pants"
+            ? "Quần"
+            : "Phụ kiện"
+        );
+      }
     };
     getDetail();
   }, [dispatch, id, navigate]);
@@ -116,8 +124,8 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   };
 
   useEffect(() => {
-    product._id !== undefined && dispatch(addViewedsProducts(product));
-  }, [dispatch, navigate, product]);
+    product?._id !== undefined && dispatch(addViewedsProducts(product));
+  }, [product]);
 
   return (
     <div>
@@ -136,7 +144,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                       <Link to={`/collections/${category}`}>{breadcrumb}</Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                      <span>{product.title}</span>
+                      <span>{product?.title}</span>
                     </Breadcrumb.Item>
                   </Breadcrumb>
                 </div>
@@ -154,7 +162,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                     <div className={cx("productContainergallery")}>
                       <div className={cx("verticalSlide")}>
                         <div>
-                          <Image src={product.image} alt={product.title} />
+                          <Image src={product?.image} alt={product?.title} />
                         </div>
                       </div>
                     </div>
@@ -167,13 +175,13 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                             <form>
                               <div className={cx("select")}></div>
                               <div className={cx("select-swatch")}>
-                                {product.size?.length > 0 && product.inStock && (
+                                {product?.size?.length > 0 && product?.inStock && (
                                   <div className={cx("swatch")}>
                                     <div className={cx("titleSwap")}>
                                       SIZE:{" "}
                                     </div>
                                     <div className={cx("selectSwap")}>
-                                      {product.size?.map((item, index) => (
+                                      {product?.size?.map((item, index) => (
                                         <div
                                           className={cx("swatchElement")}
                                           key={item}
@@ -225,7 +233,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                                   />
                                 </div>
                                 <div className={cx("addCartArea")}>
-                                  {product.inStock ? (
+                                  {product?.inStock ? (
                                     <button
                                       onClick={handleAddCart}
                                       className={cx("button", "btnAddToCart")}
@@ -245,14 +253,14 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                             </form>
                           </div>
                           <div className={cx("product-heading")}>
-                            <h1>{product.title}</h1>
+                            <h1>{product?.title}</h1>
                           </div>
                           <div className={cx("product-price")}>
                             <span className={cx("proPrice")}>
                               {new Intl.NumberFormat("vi-VN", {
                                 style: "currency",
                                 currency: "VND",
-                              }).format(product.price)}
+                              }).format(product?.price)}
                             </span>
                           </div>
                         </div>
@@ -303,7 +311,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                               >
                                 <p
                                   dangerouslySetInnerHTML={{
-                                    __html: product.description,
+                                    __html: product?.description,
                                   }}
                                 />
                                 <p>&nbsp;</p>
