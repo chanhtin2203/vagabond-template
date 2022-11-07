@@ -124,7 +124,7 @@ const ChangePassword = () => {
         }}
       >
         <Button type="primary" htmlType="submit">
-          Submit
+          Thay đổi
         </Button>
       </Form.Item>
     </Form>

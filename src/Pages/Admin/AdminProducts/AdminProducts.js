@@ -202,7 +202,7 @@ const AdminProducts = () => {
       dataIndex: "_id",
       render: (_, record, index) => {
         const pageIndex = pagination.pageIndex;
-        return <h4>{index + 10 * (pageIndex - 1) + 1}</h4>;
+        return <h4>{index + pagination.pageSize * (pageIndex - 1) + 1}</h4>;
       },
       width: 50,
       align: "center",

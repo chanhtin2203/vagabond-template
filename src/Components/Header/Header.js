@@ -20,7 +20,7 @@ import {
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
-import { Badge, Button, Dropdown, Menu, message } from "antd";
+import { Badge, Button, Dropdown, Menu } from "antd";
 import styles from "./Header.module.scss";
 import { useScrollPosition } from "../../Hooks/useScrollPosition";
 import SearchProd from "../SearchProd/SearchProd";

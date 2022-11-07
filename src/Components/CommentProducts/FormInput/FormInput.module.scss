@@ -1,0 +1,12 @@
+.form_input {
+  margin: 10px 0;
+  width: 100%;
+}
+
+[contentEditable="true"]:empty:not(:target):before {
+  content: attr(data-text);
+}
+
+.content {
+  background-color: rgba(24, 119, 242, 0.45);
+}

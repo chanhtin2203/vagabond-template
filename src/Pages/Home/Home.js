@@ -14,10 +14,10 @@ const cx = classNames.bind(styles);
 
 const Home = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.products.products); // lấy store chung redux
 
   useEffect(() => {
-    dispatch(getAllProducts());
+    dispatch(getAllProducts());  // dispatch action getallproduct từ redux thunk 
   }, []);
 
   const handleClick = () => {

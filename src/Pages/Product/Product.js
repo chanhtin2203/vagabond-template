@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import io from "socket.io-client";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import styles from "./Product.module.scss";
@@ -16,11 +17,16 @@ import {
   addViewedsProducts,
   removeViewedsProducts,
 } from "../../redux/slice/viewedProducts";
+import CommentProducts from "../../Components/CommentProducts/CommentProducts";
+import FormInput from "../../Components/CommentProducts/FormInput/FormInput";
+import { getListComments } from "../../redux/slice/commentsSlice";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
   const { id } = useParams();
+  const [socket, setSocket] = useState(null);
   const [size, setSize] = useState("");
+  const [comments, setComments] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState("");
   const [category, setCategory] = useState("");
   const [clicked, setClicked] = useState(true);
@@ -55,6 +61,56 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
     getDetail();
   }, [dispatch, id, navigate]);
 
+  useEffect(() => {
+    const socketIO = io("http://localhost:8000", {
+      transports: ["websocket"],
+      query: { id },
+    });
+    setSocket(socketIO);
+    return () => socketIO.close();
+  }, [id]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await dispatch(getListComments({ id }));
+      setComments(res.payload);
+    })();
+  }, [id, dispatch]);
+
+  // realtime
+  // join room
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("joinRoom", id);
+    }
+  }, [socket, id]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("sendCommentToClient", (msg) => {
+        setComments([msg, ...comments]);
+      });
+      return () => socket.off("sendCommentToClient");
+    }
+  }, [socket, comments]);
+
+  // send reply comments
+  useEffect(() => {
+    if (socket) {
+      socket.on("sendReplyCommentToClient", (msg) => {
+        setComments((prev) =>
+          prev.map((item) => {
+            if (item._id === msg._id) {
+              item = msg;
+            }
+            return item;
+          })
+        );
+      });
+      return () => socket.off("sendReplyCommentToClient");
+    }
+  }, [socket, comments]);
   const SlickArrowLeft = ({ currentSlide, slideCount, ...props }) => (
     <GrFormPrevious
       {...props}
@@ -181,7 +237,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                                       SIZE:{" "}
                                     </div>
                                     <div className={cx("selectSwap")}>
-                                      {product?.size?.map((item, index) => (
+                                      {product?.size.map((item, index) => (
                                         <div
                                           className={cx("swatchElement")}
                                           key={item}
@@ -455,6 +511,21 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
                 </Row>
               </div>
             </section>
+            {/* Comment product */}
+            <section className={cx("productDetailListProd")}>
+              <div className="container">
+                <div className={cx("listprodTitle")}>
+                  <h2>Đánh giá sản phẩm</h2>
+                </div>
+                <div className={cx("listprodContent")}>
+                  <FormInput id={id} socket={socket} />
+                  <div className={cx("comments_list")}>
+                    <CommentProducts comment={comments} socket={socket} />
+                  </div>
+                </div>
+              </div>
+            </section>
+            {/* Product viewed */}
             <section className={cx("productDetailListProd")}>
               <div className="container">
                 <div className={cx("listprodTitle")}>

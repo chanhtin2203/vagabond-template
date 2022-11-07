@@ -521,12 +521,14 @@ const Products = () => {
                       )}
                     </div>
                   </div>
-                  {products.length === 0 && (
+                  {products?.length === 0 && (
+                    // Product loop
                     <Col md={24}>
                       <div className={cx("collectionNullProducts")}>
                         <p>Không tìm thấy kết quả. Vui lòng thử lại!</p>
                       </div>
                     </Col>
+                    // Product loop
                   )}
                 </div>
               </div>
