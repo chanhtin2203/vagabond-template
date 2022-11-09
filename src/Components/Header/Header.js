@@ -59,6 +59,7 @@ const Header = ({ showCart, setShowCart }) => {
   const cart = useSelector((state) => state.carts.products);
   const total = useSelector((state) => state.carts.total);
   const selectorUser = useSelector((state) => state.auth.login);
+  const user = useSelector((state) => state.users.user);
   let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
 
   useEffect(() => {
@@ -75,7 +76,7 @@ const Header = ({ showCart, setShowCart }) => {
         await dispatch(loginSuccess(null));
       }
     })();
-  }, []);
+  }, [selectorUser]);
 
   const checkLoginAndRegister =
     location.pathname.includes("/login") ||
@@ -481,7 +482,7 @@ const Header = ({ showCart, setShowCart }) => {
                     <a onClick={(e) => e.preventDefault()}>
                       <FaRegUserCircle style={{ fontSize: "2.5rem" }} />
                       {selectorUser !== null ? (
-                        <p>{selectorUser?.fullname}</p>
+                        <p>{user?.fullname}</p>
                       ) : (
                         <p>Chưa đăng nhập?</p>
                       )}

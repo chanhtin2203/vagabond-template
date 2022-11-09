@@ -17,7 +17,7 @@ const Chat = ({ openChat, setOpenChat }) => {
   const [messages, setMessages] = useState([]);
   const socket = useConnectSocket(io);
 
-  const userInfo = useSelector((state) => state.auth.login);
+  const userInfo = useSelector((state) => state.users.user);
 
   useEffect(() => {
     if (openChat) {
