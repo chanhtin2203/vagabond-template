@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames/bind";
-import { Avatar } from "antd";
+import { Avatar, Badge } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import styles from "../AdminChat.module.scss";
 
@@ -16,9 +16,11 @@ const ListConversation = (props) => {
           className={cx("contact-list-item")}
           onClick={() => onConversationClick(conversation)}
         >
-          <div className={cx("contact-list-item-avatar")}>
-            <Avatar icon={<UserOutlined />} />
-          </div>
+          <Badge count={""}>
+            <div className={cx("contact-list-item-avatar")}>
+              <Avatar icon={<UserOutlined />} />
+            </div>
+          </Badge>
           <div className={cx("contact-list-item-content")}>
             <p className={cx("contact-list-item-name")}>
               {conversation.nameConversation}

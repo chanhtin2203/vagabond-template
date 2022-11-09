@@ -76,7 +76,7 @@ const Header = ({ showCart, setShowCart }) => {
         await dispatch(loginSuccess(null));
       }
     })();
-  }, [selectorUser]);
+  }, []);
 
   const checkLoginAndRegister =
     location.pathname.includes("/login") ||
