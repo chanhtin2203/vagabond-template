@@ -16,7 +16,7 @@ const FormInput = ({ id, socket, name, setReply, send }) => {
     if (name) {
       contentRef.current.innerHTML = `<a href="!#" style="background-color: rgba(24, 119, 242, 0.45);font-weight: 600;text-transform: capitalize;">${name}:</a>`;
     }
-  }, []);
+  }, [name]);
 
   const handleSubmitMessage = () => {
     const content = contentRef.current.innerHTML;
@@ -67,7 +67,7 @@ const FormInput = ({ id, socket, name, setReply, send }) => {
           <Button
             size="large"
             type="primary"
-            style={{ width: 100 }}
+            style={{ width: 100, float: "right" }}
             onClick={handleSubmitMessage}
           >
             Gửi

@@ -18,6 +18,7 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard/AdminDashboard";
 import AdminUser from "./Pages/Admin/AdminUser/AdminUser";
 import AdminProducts from "./Pages/Admin/AdminProducts/AdminProducts";
 import AdminOrders from "./Pages/Admin/AdminOrders/AdminOrders";
+import AdminChat from "./Pages/Admin/AdminChat/AdminChat";
 function App() {
   const user = useSelector((state) => state.auth.login);
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="users" element={<AdminUser />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="orders" element={<AdminOrders />} />
+              <Route path="chat" element={<AdminChat />} />
               <Route path="payment" element />
             </Route>
           </>

@@ -1,9 +1,8 @@
 import { Avatar, Comment, List, Tooltip } from "antd";
-import moment from "moment";
+import moment from "moment-with-locales-es6";
 import React, { useState } from "react";
 import FormInput from "./FormInput/FormInput";
 import { UserOutlined } from "@ant-design/icons";
-
 const CommentProducts = ({ comment, socket }) => {
   const [reply, setReply] = useState(false);
   const [tag, setTag] = useState(false);
@@ -18,15 +17,15 @@ const CommentProducts = ({ comment, socket }) => {
       <Comment
         actions={[
           <>
-            <span
-              style={{ fontSize: "14px" }}
-              onClick={() => handleReply(item._id)}
-              key="comment-nested-reply-to"
-            >
-              Phản hồi
-            </span>
             {level === 1 && (
               <>
+                <span
+                  style={{ fontSize: "14px" }}
+                  onClick={() => handleReply(item._id)}
+                  key="comment-nested-reply-to"
+                >
+                  Phản hồi
+                </span>
                 <span style={{ fontSize: "14px" }}>Ẩn phẩn hồi</span>
               </>
             )}
@@ -48,7 +47,7 @@ const CommentProducts = ({ comment, socket }) => {
           <Tooltip
             title={<span>{new Date(item.createdAt).toLocaleString()}</span>}
           >
-            <strong>{moment(item.createdAt).fromNow()}</strong>
+            <strong>{moment(item.createdAt).locale("vi").fromNow()}</strong>
           </Tooltip>
         }
       >
@@ -59,6 +58,9 @@ const CommentProducts = ({ comment, socket }) => {
 
   return (
     <>
+      <br />
+      <br />
+      <br />
       <List
         className="comment-list"
         itemLayout="vertical"

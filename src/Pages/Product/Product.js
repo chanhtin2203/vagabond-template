@@ -20,11 +20,11 @@ import {
 import CommentProducts from "../../Components/CommentProducts/CommentProducts";
 import FormInput from "../../Components/CommentProducts/FormInput/FormInput";
 import { getListComments } from "../../redux/slice/commentsSlice";
+import useConnectSocket from "../../Hooks/useConnectSocket";
 
 const cx = classNames.bind(styles);
 const Product = ({ currentSlide, slideCount, ...props }) => {
   const { id } = useParams();
-  const [socket, setSocket] = useState(null);
   const [size, setSize] = useState("");
   const [comments, setComments] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState("");
@@ -38,6 +38,7 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
   const loading = useSelector((state) => state.products.isLoading);
   const viewedProducts = useSelector((state) => state.views.products);
   const navigate = useNavigate();
+  const socket = useConnectSocket(io);
 
   useEffect(() => {
     const getDetail = async () => {
@@ -60,15 +61,6 @@ const Product = ({ currentSlide, slideCount, ...props }) => {
     };
     getDetail();
   }, [dispatch, id, navigate]);
-
-  useEffect(() => {
-    const socketIO = io("http://localhost:8000", {
-      transports: ["websocket"],
-      query: { id },
-    });
-    setSocket(socketIO);
-    return () => socketIO.close();
-  }, [id]);
 
   useEffect(() => {
     (async () => {

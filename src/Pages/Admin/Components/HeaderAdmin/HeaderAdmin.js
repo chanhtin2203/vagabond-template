@@ -11,6 +11,7 @@ import {
   FcInTransit,
   FcPaid,
   FcTrademark,
+  FcOnlineSupport,
 } from "react-icons/fc";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Profile from "../../Components/Profile/Profile";
@@ -53,6 +54,11 @@ const HeaderAdmin = () => {
       <NavLink to={"/admin/orders"}>Quản lý đơn hàng</NavLink>,
       "orders",
       <FcPaid />
+    ),
+    getItem(
+      <NavLink to={"/admin/chat"}>Hỗ trợ người dùng</NavLink>,
+      "chats",
+      <FcOnlineSupport />
     ),
     getItem(
       <a href="https://sandbox.vnpayment.vn/merchantv2/" target="_blank">

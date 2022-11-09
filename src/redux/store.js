@@ -17,6 +17,7 @@ import ordersReducer from "./slice/orderSlice";
 import viewsProductReducer from "./slice/viewedProducts";
 import authReducer from "./slice/authSlice";
 import commentsReducer from "./slice/commentsSlice";
+import chatsReducer from "./slice/chatSlice";
 
 // Store
 const persistConfig = {
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   views: viewsProductReducer,
   auth: authReducer,
   comments: commentsReducer,
+  chats: chatsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
