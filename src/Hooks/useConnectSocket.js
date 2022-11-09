@@ -4,7 +4,7 @@ function useConnectSocket(io) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketIO = io("http://localhost:8001", {
+    const socketIO = io("https://vagabond-api-production.up.railway.app", {
       transports: ["websocket"],
     });
     setSocket(socketIO);
