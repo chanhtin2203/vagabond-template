@@ -4,7 +4,7 @@ function useConnectSocket(io) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketIO = io();
+    const socketIO = io("https://vagabond-api-production.up.railway.app");
     setSocket(socketIO);
     return () => socketIO.close();
   }, [io]);
