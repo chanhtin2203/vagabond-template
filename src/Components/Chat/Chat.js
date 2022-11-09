@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { LineOutlined, MessageOutlined } from "@ant-design/icons";
 import ListMessage from "./ListMessage/ListMessage";
 import TypeMessage from "./TypeMessage/TypeMessage";

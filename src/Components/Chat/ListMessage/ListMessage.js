@@ -4,7 +4,7 @@ import styles from "../Chat.module.scss";
 
 const cx = classNames.bind(styles);
 const ListMessage = (props) => {
-  const { messages, user, openChat } = props;
+  const { messages, user } = props;
   const divRef = useRef();
 
   useEffect(() => {
