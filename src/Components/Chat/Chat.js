@@ -18,6 +18,7 @@ const Chat = ({ openChat, setOpenChat }) => {
   const socket = useConnectSocket(io);
 
   const userInfo = useSelector((state) => state.users.user);
+  const authLogin = useSelector((state) => state.auth.login);
 
   useEffect(() => {
     if (openChat) {
@@ -74,7 +75,7 @@ const Chat = ({ openChat, setOpenChat }) => {
   return (
     <div>
       <div className={cx("appchat")}>
-        {userInfo === null ? (
+        {authLogin === null ? (
           <Tooltip
             title="Vui lòng đăng nhập để được hỗ trợ"
             placement="topRight"
