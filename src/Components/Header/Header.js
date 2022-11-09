@@ -109,7 +109,7 @@ const Header = ({ showCart, setShowCart }) => {
     if (location.pathname.includes("/orders")) {
       navigate("/");
     }
-
+    setOpenChat(false);
     dispatch(
       logoutUser({
         accessToken: selectorUser?.accessToken,

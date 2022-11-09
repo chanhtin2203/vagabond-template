@@ -1,6 +1,7 @@
 #appchat {
   position: fixed;
   width: 80%;
+  height: 100vh;
 }
 #appchat > span {
   display: flex;
@@ -19,7 +20,7 @@
 }
 .contact {
   position: fixed;
-  height: 100vh;
+  height: 80vh;
   overflow-y: scroll;
   background-color: white;
 
@@ -81,7 +82,7 @@
   flex-direction: column;
   border: 1px solid #eee;
 
-  height: 92vh;
+  height: 80vh;
 }
 .ad-chatuser-user {
   text-align: left;

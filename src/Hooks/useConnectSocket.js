@@ -9,7 +9,7 @@ function useConnectSocket(io) {
     });
     setSocket(socketIO);
     return () => socketIO.close();
-  }, []);
+  }, [io]);
 
   return socket;
 }

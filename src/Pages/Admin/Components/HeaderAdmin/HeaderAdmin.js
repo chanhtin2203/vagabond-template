@@ -142,7 +142,7 @@ const HeaderAdmin = () => {
           className="site-layout-background"
           style={{
             margin: "24px",
-            minHeight: "630px",
+            minHeight: "600px",
           }}
         >
           <Outlet />

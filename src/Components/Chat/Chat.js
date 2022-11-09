@@ -9,28 +9,21 @@ import classNames from "classnames/bind";
 import styles from "./Chat.module.scss";
 import useConnectSocket from "../../Hooks/useConnectSocket";
 import { Tooltip } from "antd";
-import { createAxios } from "../../Utils/createInstance";
 import { BASE_URL } from "../../Utils/BaseUrl";
-import { loginSuccess } from "../../redux/slice/authSlice";
+import axios from "axios";
 
 const cx = classNames.bind(styles);
 const Chat = ({ openChat, setOpenChat }) => {
-  const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const socket = useConnectSocket(io);
 
   const userInfo = useSelector((state) => state.auth.login);
 
-  let axiosJWT = createAxios(userInfo, dispatch, loginSuccess);
-
   useEffect(() => {
     if (openChat) {
       const getAllMessageByConversation = async () => {
-        const { data } = await axiosJWT.get(
-          `${BASE_URL}/chat/message?idUser=${userInfo?._id}`,
-          {
-            headers: { token: `Beaer ${userInfo.accessToken}` },
-          }
+        const { data } = await axios.get(
+          `${BASE_URL}/chat/message?idUser=${userInfo?._id}`
         );
         setMessages(data.messageList);
       };
@@ -61,9 +54,7 @@ const Chat = ({ openChat, setOpenChat }) => {
           message,
           idConversation: conversation._id,
         };
-        const { data } = await axiosJWT.post(`${BASE_URL}/chat/save`, payload, {
-          headers: { token: `Beaer ${userInfo.accessToken}` },
-        });
+        const { data } = await axios.post(`${BASE_URL}/chat/save`, payload);
         socket.emit("chat", data);
       });
     } else {
@@ -75,9 +66,7 @@ const Chat = ({ openChat, setOpenChat }) => {
         message,
         idConversation,
       };
-      const { data } = await axiosJWT.post(`${BASE_URL}/chat/save`, payload, {
-        headers: { token: `Beaer ${userInfo.accessToken}` },
-      });
+      const { data } = await axios.post(`${BASE_URL}/chat/save`, payload);
       socket.emit("chat", data);
     }
   };

@@ -9,15 +9,12 @@ const ListMessage = (props) => {
 
   useEffect(() => {
     const scrollMessage = () => {
-      divRef.current.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
+      let element = document.getElementById("chatuser-listmessage");
+      element.scrollTop = element.scrollHeight;
     };
-    if (openChat) {
-      scrollMessage();
-    }
-  }, [openChat]);
+
+    scrollMessage();
+  }, [messages]);
 
   return (
     <div
