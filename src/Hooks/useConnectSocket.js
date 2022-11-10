@@ -6,6 +6,7 @@ function useConnectSocket(io) {
   useEffect(() => {
     const socketIO = io("https://vagabond-api-production.up.railway.app", {
       transports: ["websocket"],
+      secure: true,
     });
     setSocket(socketIO);
     return () => socketIO.close();
