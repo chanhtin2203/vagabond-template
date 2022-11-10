@@ -9,7 +9,7 @@ function useConnectSocket(io) {
       secure: true,
     });
     setSocket(socketIO);
-    return () => socketIO.close();
+//     return () => socketIO.close();
   }, [io]);
 
   return socket;
