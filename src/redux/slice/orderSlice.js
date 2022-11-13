@@ -148,6 +148,9 @@ const orders = createSlice({
     [updateOrders.fulfilled]: (state, action) => {
       state.isFetching = false;
       state.order = action.payload;
+      state.allOrders = state.allOrders.map((item) =>
+        item._id === action.payload._id ? action.payload : item
+      );
     },
     [updateOrders.rejected]: (state) => {
       state.isFetching = false;

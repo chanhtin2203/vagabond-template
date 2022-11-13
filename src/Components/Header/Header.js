@@ -31,7 +31,11 @@ import {
   increaseProduct,
 } from "../../redux/slice/cartSlice";
 import { getUser } from "../../redux/slice/userSlice";
-import { logoutUser, loginSuccess } from "../../redux/slice/authSlice";
+import {
+  logoutUser,
+  loginSuccess,
+  updateAdmin,
+} from "../../redux/slice/authSlice";
 import { createAxios } from "../../Utils/createInstance";
 import Chat from "../Chat/Chat";
 
@@ -72,7 +76,7 @@ const Header = ({ showCart, setShowCart }) => {
           axiosJWT,
         })
       );
-      if (res.type.includes("rejected")) {
+      if (res.payload === undefined) {
         await dispatch(loginSuccess(null));
       }
     })();

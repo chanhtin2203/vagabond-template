@@ -49,7 +49,7 @@ const Profile = () => {
             }
           />
           <span style={{ paddingLeft: "5px", color: "#000" }}>
-            Nguyễn chánh tín
+            {authUser.fullname}
           </span>
         </a>
       </Dropdown>

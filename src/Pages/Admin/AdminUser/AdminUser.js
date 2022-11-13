@@ -31,7 +31,7 @@ import {
   deleteUserByAdmin,
   searchUser,
 } from "../../../redux/slice/userSlice";
-import { loginSuccess } from "../../../redux/slice/authSlice";
+import { loginSuccess, updateAdmin } from "../../../redux/slice/authSlice";
 import { getAllOrders } from "../../../redux/slice/orderSlice";
 
 const AdminUser = () => {
@@ -120,10 +120,11 @@ const AdminUser = () => {
         axiosJWT,
       })
     );
+
     if (res.type.includes("fulfilled")) {
       message.success("Sửa thành công");
     } else {
-      message.success("Sửa không thành công");
+      message.error("Sửa không thành công");
     }
   };
 

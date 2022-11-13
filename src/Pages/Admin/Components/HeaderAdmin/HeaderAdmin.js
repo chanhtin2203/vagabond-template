@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -13,7 +14,11 @@ import {
   FcTrademark,
   FcOnlineSupport,
 } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { loginSuccess, updateAdmin } from "../../../../redux/slice/authSlice";
+import { getUser } from "../../../../redux/slice/userSlice";
+import { createAxios } from "../../../../Utils/createInstance";
 import Profile from "../../Components/Profile/Profile";
 import "./Admin.scss";
 
@@ -23,6 +28,9 @@ const HeaderAdmin = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selected, setSelected] = useState("");
   const location = useLocation();
+  const dispatch = useDispatch();
+  const selectorUser = useSelector((state) => state.auth.login);
+  let axiosJWT = createAxios(selectorUser, dispatch, loginSuccess);
 
   function getItem(label, key, icon, children, theme) {
     return {
@@ -80,6 +88,23 @@ const HeaderAdmin = () => {
         ? location.pathname.split("/")[3]
         : location.pathname.split("/")[2]
     );
+  }, [location]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await dispatch(
+        getUser({
+          id: selectorUser?._id,
+          accessToken: selectorUser?.accessToken,
+          axiosJWT,
+        })
+      );
+      if (res.payload === undefined) {
+        await dispatch(loginSuccess(null));
+      } else {
+        await dispatch(updateAdmin(res.payload));
+      }
+    })();
   }, [location]);
 
   return (

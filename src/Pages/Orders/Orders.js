@@ -259,12 +259,21 @@ const Orders = () => {
                           <Card.Meta
                             title={item.title}
                             description={
-                              <span style={{ color: "red" }}>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.price)}
-                              </span>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span style={{ color: "red" }}>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
+                                </span>
+                                <strong>{dt.size}</strong>
+                              </div>
                             }
                           />
                         </Card>

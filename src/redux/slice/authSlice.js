@@ -37,6 +37,12 @@ const auth = createSlice({
     loginSuccess: (state, action) => {
       state.login = action.payload;
     },
+    updateAdmin: (state, action) => {
+      state.login = state.login._id === action.payload._id && {
+        ...state.login,
+        ...action.payload,
+      };
+    },
   },
   extraReducers: {
     // login
@@ -66,6 +72,6 @@ const auth = createSlice({
   },
 });
 
-export const { loginSuccess } = auth.actions;
+export const { loginSuccess, updateAdmin } = auth.actions;
 
 export default auth.reducer;

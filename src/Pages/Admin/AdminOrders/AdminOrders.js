@@ -79,7 +79,7 @@ const AdminOrders = () => {
         })
       );
     })();
-  }, [tabsValue]);
+  }, [tabsValue, dispatch]);
 
   useEffect(() => {
     (async () => {
@@ -529,17 +529,33 @@ const AdminOrders = () => {
                           hoverable
                           bordered={true}
                           cover={
-                            <Tooltip title={item.title} color={"black"}>
+                            <Tooltip
+                              title={`Tên: ${item.title}`}
+                              color={"black"}
+                            >
                               <img alt={item.title} src={item.image} />
                             </Tooltip>
                           }
                         >
                           <Card.Meta
                             title={item.title}
-                            description={new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
+                            description={
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span style={{ color: "red" }}>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
+                                </span>
+                                <strong>{dt.size}</strong>
+                              </div>
+                            }
                           />
                         </Card>
                       </Badge.Ribbon>
