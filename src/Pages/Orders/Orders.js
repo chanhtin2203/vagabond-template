@@ -7,6 +7,7 @@ import {
   Col,
   Divider,
   Drawer,
+  Empty,
   Row,
   Tag,
   Tooltip,
@@ -84,66 +85,82 @@ const Orders = () => {
             </div>
             <div className={cx("contentPageOrders")}>
               <div className="site-card-wrapper">
-                <Row gutter={16}>
-                  {orders.map((item) => (
-                    <Col span={8} key={item._id}>
-                      <Card
-                        onClick={() => showDrawer(item._id)}
-                        hoverable
-                        cover={
-                          <div style={{ padding: 10 }}>
-                            <p>
-                              Mã đơn: <strong>{item._id}</strong>
-                            </p>
-                            <p>
-                              Tên khách hàng: <strong>{item.fullname}</strong>
-                            </p>
-                            <p>
-                              Thanh toán:{" "}
-                              <strong>
-                                {item.payment ? (
-                                  <Tag color="orange">Thanh toán bằng thẻ</Tag>
-                                ) : (
-                                  <Tag color="blue">
-                                    Thanh toán bằng tiền mặt
-                                  </Tag>
-                                )}
-                              </strong>
-                            </p>
-                            <p>
-                              Trạng thái:{" "}
-                              <strong>
-                                {item.status === "success" ? (
-                                  <Tag color="green">
-                                    Đơn hàng xác nhận thành công
-                                  </Tag>
-                                ) : item.status === "pending" ? (
-                                  <Tag color="volcano">
-                                    Đơn hàng chờ xác nhận
-                                  </Tag>
-                                ) : (
-                                  <Tag color="red">Đơn hàng đã hủy</Tag>
-                                )}
-                              </strong>
-                            </p>
-                            <p>
-                              Ngày mua: <strong>{item.payDate}</strong>
-                            </p>
-                          </div>
-                        }
-                      >
-                        <Card.Meta
-                          title={
-                            <a style={{ color: "blue" }}>
-                              Xem chi tiết đơn hàng
-                            </a>
+                {orders.length === 0 ? (
+                  <Empty
+                    imageStyle={{
+                      height: 100,
+                    }}
+                    style={{ marginTop: 100 }}
+                    description={
+                      <span style={{ color: "#000" }}>
+                        Giỏ hàng của bạn đang trống...
+                      </span>
+                    }
+                  ></Empty>
+                ) : (
+                  <Row gutter={16}>
+                    {orders.map((item) => (
+                      <Col span={8} key={item._id}>
+                        <Card
+                          onClick={() => showDrawer(item._id)}
+                          hoverable
+                          cover={
+                            <div style={{ padding: 10 }}>
+                              <p>
+                                Mã đơn: <strong>{item._id}</strong>
+                              </p>
+                              <p>
+                                Tên khách hàng: <strong>{item.fullname}</strong>
+                              </p>
+                              <p>
+                                Thanh toán:{" "}
+                                <strong>
+                                  {item.payment ? (
+                                    <Tag color="orange">
+                                      Thanh toán bằng thẻ
+                                    </Tag>
+                                  ) : (
+                                    <Tag color="blue">
+                                      Thanh toán bằng tiền mặt
+                                    </Tag>
+                                  )}
+                                </strong>
+                              </p>
+                              <p>
+                                Trạng thái:{" "}
+                                <strong>
+                                  {item.status === "success" ? (
+                                    <Tag color="green">
+                                      Đơn hàng xác nhận thành công
+                                    </Tag>
+                                  ) : item.status === "pending" ? (
+                                    <Tag color="volcano">
+                                      Đơn hàng chờ xác nhận
+                                    </Tag>
+                                  ) : (
+                                    <Tag color="red">Đơn hàng đã hủy</Tag>
+                                  )}
+                                </strong>
+                              </p>
+                              <p>
+                                Ngày mua: <strong>{item.payDate}</strong>
+                              </p>
+                            </div>
                           }
-                        />
-                      </Card>
-                      <Divider />
-                    </Col>
-                  ))}
-                </Row>
+                        >
+                          <Card.Meta
+                            title={
+                              <a style={{ color: "blue" }}>
+                                Xem chi tiết đơn hàng
+                              </a>
+                            }
+                          />
+                        </Card>
+                        <Divider />
+                      </Col>
+                    ))}
+                  </Row>
+                )}
               </div>
             </div>
           </div>

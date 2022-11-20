@@ -145,7 +145,7 @@ const Register = () => {
                         validator: () => {
                           if (errorsExists?.message?.includes("username")) {
                             return Promise.reject(
-                              "Tên Email này đã có người sử dụng, Vui lòng sử dụng tên khác!"
+                              "Tên đăng nhập này đã có người sử dụng, Vui lòng sử dụng tên khác!"
                             );
                           } else {
                             return Promise.resolve();

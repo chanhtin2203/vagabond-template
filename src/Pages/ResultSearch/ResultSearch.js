@@ -12,16 +12,13 @@ import styles from "./ResultSearch.module.scss";
 const cx = classNames.bind(styles);
 
 const ResultSearch = () => {
-  const [category, setCategory] = useState("");
   const search = useSelector((state) => state.products.searchProd);
   const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchingApi = async () => {
-      const res = await dispatch(searchProduct(location.search.split("=")[1]));
-      const { subCategory } = res.payload.find((item) => item);
-      setCategory(subCategory);
+      await dispatch(searchProduct(location.search.split("=")[1]));
     };
     fetchingApi();
   }, []);
@@ -44,7 +41,7 @@ const ResultSearch = () => {
                 <strong> "{location.search.split("=")[1]}".</strong>
               </p>
             </div>
-            <Collection nameBtn={category} items={search} />
+            <Collection nameBtn={" "} items={search} />
           </div>
         </div>
       </main>

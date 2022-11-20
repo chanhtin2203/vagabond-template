@@ -3,9 +3,11 @@ import moment from "moment-with-locales-es6";
 import React, { useState } from "react";
 import FormInput from "./FormInput/FormInput";
 import { UserOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 const CommentProducts = ({ comment, socket }) => {
   const [reply, setReply] = useState(false);
   const [tag, setTag] = useState(false);
+  const user = useSelector((state) => state.auth.login);
   const handleReply = (id) => {
     setReply(id);
     setTag(!tag);
@@ -17,7 +19,7 @@ const CommentProducts = ({ comment, socket }) => {
       <Comment
         actions={[
           <>
-            {level === 1 && (
+            {user !== null && level === 1 && (
               <>
                 <span
                   style={{ fontSize: "14px" }}

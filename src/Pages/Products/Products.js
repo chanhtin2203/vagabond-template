@@ -74,52 +74,52 @@ const Products = () => {
   ];
 
   const checkboxColor = [
-    {
-      id: "c1",
-      type: "checkbox",
-      title: "Tím",
-      value: "violet",
-      bg: "#eb11eb",
-    },
-    {
-      id: "c2",
-      type: "checkbox",
-      title: "Vàng",
-      value: "yellow",
-      bg: "#ffff05",
-    },
-    {
-      id: "c3",
-      type: "checkbox",
-      title: "Cam",
-      value: "orange",
-      bg: "#f54105",
-    },
-    { id: "c4", type: "checkbox", title: "Hồng", value: "pink", bg: "#f23895" },
-    { id: "c5", type: "checkbox", title: "Đen", value: "black", bg: "#000000" },
-    { id: "c6", type: "checkbox", title: "Xám", value: "grey", bg: "#cccaca" },
-    {
-      id: "c7",
-      type: "checkbox",
-      title: "Trắng",
-      value: "white",
-      bg: "#fffcfc",
-    },
-    {
-      id: "c8",
-      type: "checkbox",
-      title: "Xanh dương",
-      value: "blue",
-      bg: "#1757eb",
-    },
-    { id: "c9", type: "checkbox", title: "Xanh", value: "xanh", bg: "#099116" },
-    {
-      id: "c10",
-      type: "checkbox",
-      title: "Xanh lá",
-      value: "green",
-      bg: "#52ff52",
-    },
+    // {
+    //   id: "c1",
+    //   type: "checkbox",
+    //   title: "Tím",
+    //   value: "violet",
+    //   bg: "#eb11eb",
+    // },
+    // {
+    //   id: "c2",
+    //   type: "checkbox",
+    //   title: "Vàng",
+    //   value: "yellow",
+    //   bg: "#ffff05",
+    // },
+    // {
+    //   id: "c3",
+    //   type: "checkbox",
+    //   title: "Cam",
+    //   value: "orange",
+    //   bg: "#f54105",
+    // },
+    // { id: "c4", type: "checkbox", title: "Hồng", value: "pink", bg: "#f23895" },
+    // { id: "c5", type: "checkbox", title: "Đen", value: "black", bg: "#000000" },
+    // { id: "c6", type: "checkbox", title: "Xám", value: "grey", bg: "#cccaca" },
+    // {
+    //   id: "c7",
+    //   type: "checkbox",
+    //   title: "Trắng",
+    //   value: "white",
+    //   bg: "#fffcfc",
+    // },
+    // {
+    //   id: "c8",
+    //   type: "checkbox",
+    //   title: "Xanh dương",
+    //   value: "blue",
+    //   bg: "#1757eb",
+    // },
+    // { id: "c9", type: "checkbox", title: "Xanh", value: "xanh", bg: "#099116" },
+    // {
+    //   id: "c10",
+    //   type: "checkbox",
+    //   title: "Xanh lá",
+    //   value: "green",
+    //   bg: "#52ff52",
+    // },
   ];
 
   const handleChangeCheckbox = (id) => {
