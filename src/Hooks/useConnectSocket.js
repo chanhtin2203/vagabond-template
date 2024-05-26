@@ -4,7 +4,7 @@ function useConnectSocket(io) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketIO = io("https://vagabond-api.onrender.com", {
+    const socketIO = io("https://vagabond-api.vercel.app", {
       transports: ["websocket"],
       secure: true,
     });
