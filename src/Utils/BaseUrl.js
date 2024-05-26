@@ -1,1 +1,1 @@
-export const BASE_URL = "https://vagabond-api-production.up.railway.app/v1";
+export const BASE_URL = "https://vagabond-api.vercel.app/v1";
